@@ -1,6 +1,5 @@
 # IT202
 ## Nate
-
 My first repository
 git add README.md
 git status

@@ -17,7 +17,8 @@
     
     //Number 4
     echo "<br>\n";
-    echo "I used the modulus operator in order to find the remainder of dividing by 2. Because if dividing a number by 2 results in a remainder of 0, it's even, if it's 1, then it's odd."
+    echo "I used the modulus operator in order to find the remainder of dividing by 2.
+    <br>\n Because if dividing a number by 2 results in a remainder of 0, it's even, if it's 1, then it's odd."
     
     /*
     Number 5

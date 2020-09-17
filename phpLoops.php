@@ -25,7 +25,7 @@
     I'll submit the screenshot.
     
     Number 6
-    https://github.com/NJITneg5/IT202-009/blob/master/phpLoopHW.php
+    https://github.com/NJITneg5/IT202-009/blob/master/phpLoops.php
     */
 	
 ?>

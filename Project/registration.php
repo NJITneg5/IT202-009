@@ -26,8 +26,8 @@ body {
 		<label for= "pw">Password</label><br>
 		<input type= "password" id= "pw" name= "pw" required/><br>
 		<label for= "confirmPw">Confirm Password</label><br>
-		<input type= "password" id= "confirmPw" name= "ConfirmPw" required/><br>
-		<input type= "submit" id= "register" value= "Register"/>
+		<input type= "password" id= "confirmPw" name= "confirmPw" required/><br>
+		<input type= "submit" name= "register" value= "Register"/>
 	</form>
 	
 	

@@ -22,11 +22,11 @@ body {
 	<h1>Please enter your the email and password you would like to use to Register.</h1>
 	<form method = "POST">
 		<label for= "email">Email</label><br>
-		<input type= "email" id= "email" name= "email" required/>
+		<input type= "email" id= "email" name= "email" required/><br>
 		<label for= "pw">Password</label><br>
-		<input type= "password" id= "pw" name= "pw" required/>
+		<input type= "password" id= "pw" name= "pw" required/><br>
 		<label for= "confirmPw">Confirm Password</label><br>
-		<input type= "password" id= "confirmPw" name= "ConfirmPw" required/>
+		<input type= "password" id= "confirmPw" name= "ConfirmPw" required/><br>
 		<input type= "submit" id= "register" value= "Register"/>
 	</form>
 	
@@ -34,9 +34,9 @@ body {
 	<hr>
 	
 	<address>
-	Page made by Nate Gile 
-	for Internet Applications Final Project. 
-	Created September 2020
+	Page made by Nate Gile <br>
+	for Internet Applications Final Project. <br>
+	Created September 2020<br>
 	</address>
 	
 	

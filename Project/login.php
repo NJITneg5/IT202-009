@@ -81,7 +81,7 @@ body {
 						echo "<br>Welcome! You're logged in!<br>";
 					}
 					else{
-						echo "<br>Invalid password, try again"
+						echo "<br>Invalid password, try again";
 					}
 				}
 				else{

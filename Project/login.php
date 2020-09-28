@@ -64,7 +64,7 @@ body {
             require_once("db.php");
             $db = getDB();
             if(isset($db)){
-                $stmt = $db->prepare("SELECT email, password from Users WHERE email = :email LIMIT 1");
+                $stmt = $db->prepare("SELECT email, password from TPUsers WHERE email = :email LIMIT 1");
                 $params = array(":email"=>$email);
                 $r = $stmt->execute($params);
 

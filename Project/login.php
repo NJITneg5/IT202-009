@@ -65,7 +65,7 @@ body {
 			if(isset($db)){
 				$stmt = $db->prepare("SELECT email, password FROM TPUsers WEHRE email = :email LIMIT 1");
 				
-				$params - array":email"=>$email);
+				$params = array(":email"=>$email);
 				$r = $stmt->execute($params);
 				echo "db returned: " . var_export($r, true);
 				

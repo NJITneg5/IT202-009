@@ -62,6 +62,7 @@ body {
 		}
 		if($isValid){
 			require_once("db.php");
+			$db = getDB();
 			if(isset($db)){
 				$stmt = $db->prepare("SELECT email, password FROM TPUsers WEHRE email = :email LIMIT 1");
 				

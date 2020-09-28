@@ -60,40 +60,39 @@ body {
 			$isValid = false;
 			echo "<br>Invalid email<br>";
 		}
-		if($isValid){
-			require_once("db.php");
-			$db = getDB();
-			if(isset($db)){
-				$stmt = $db->prepare("SELECT email, password FROM TPUsers WEHRE email = :email LIMIT 1");
-				
-				$params = array(":email"=>$email);
-				$r = $stmt->execute($params);
-				echo "db returned: " . var_export($r, true);
-				
-				$e = $stmt->errorInfo();
-				if($e[0] != "00000"){
-					echo "Something went wrong: " . var_export($e, true);
-				}
-				
-				$result = $stmt->fetch(PDO::FETCH_ASSOC);
-				if($result && isset($result["password"])){
-					$passwordHash = $result["password"];
-					if(password_verify($password, $passwordHash)){
-						echo "<br>Welcome! You're logged in!<br>";
-					}
-					else{
-						echo "<br>Invalid password, try again";
-					}
-				}
-				else{
-					echo "<br>Invalid User";
-				}
-			}
-		}
-		else{
-			echo "<br> There was a validation issue";
-		}
-	}
+		 if($isValid){
+            require_once("db.php");
+            $db = getDB();
+            if(isset($db)){
+                $stmt = $db->prepare("SELECT email, password from Users WHERE email = :email LIMIT 1");
+                $params = array(":email"=>$email);
+                $r = $stmt->execute($params);
+
+                echo "db returned: " . var_export($r, true);
+                $e = $stmt->errorInfo();
+                if($e[0] != "00000"){
+                    echo "uh oh something went wrong: " . var_export($e, true);
+                }
+                
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($result && isset($result["password"])){
+                    $passwordHash = $result["password"];
+                    if(password_verify($password, $passwordHash)){
+                        echo "<br>Welcome! You're logged in!<br>";
+                    }
+                    else{
+                        echo "<br>Invalid password, try again<br>";
+                    }
+                }
+                else{
+                    echo "<br>Invalid user<br>";
+                }
+            }
+        }
+        else{
+            echo "There was a validation issue";
+        }
+    }
 ?>
 </body>
 </html>

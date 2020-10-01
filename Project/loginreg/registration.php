@@ -75,7 +75,7 @@ body {
 			$db = getDB();
 			if(isset($db)){
 				//here we'll use placeholders to let PDO map and sanitize our data
-				$stmt = $db->prepare("INSERT INTO Users(email, password) VALUES(:email, :password)");
+				$stmt = $db->prepare("INSERT INTO TPUsers(email, password) VALUES(:email, :password)");
 				//here's the data map for the parameter to data
 				$params = array(":email"=>$email, ":password"=>$hash);
 				$r = $stmt->execute($params);

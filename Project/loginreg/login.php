@@ -65,7 +65,7 @@ body {
 			$db = getDB();
 			if(isset($db)){
 				//here we'll use placeholders to let PDO map and sanitize our data
-				$stmt = $db->prepare("SELECT email, password from Users WHERE email = :email LIMIT 1");
+				$stmt = $db->prepare("SELECT email, password from TPUsers WHERE email = :email LIMIT 1");
 				//here's the data map for the parameter to data
 				$params = array(":email"=>$email);
 				$r = $stmt->execute($params);

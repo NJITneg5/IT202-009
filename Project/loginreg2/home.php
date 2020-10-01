@@ -46,7 +46,7 @@ body {
 	<address>
 	Page made by Nate Gile <br>
 	for Internet Applications Final Project. <br>
-	Created September 2020<br>
+	Created October 2020<br>
 	</address>
 
 </body>

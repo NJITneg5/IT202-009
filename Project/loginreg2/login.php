@@ -72,15 +72,14 @@ body {
             
 			if(isset($db)){
                 $stmt = $db->prepare("SELECT id, email, password from TPUsers WHERE email = :email LIMIT 1");
-                $params = array(":email"=>$email);
+                
+				$params = array(":email"=>$email);
                 $r = $stmt->execute($params);
-
                 echo "db returned: " . var_export($r, true);
                 $e = $stmt->errorInfo();
                 if($e[0] != "00000"){
                     echo "uh oh something went wrong: " . var_export($e, true);
                 }
-                
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
                 if($result && isset($result["password"])){
                     $passwordHash = $result["password"];
@@ -88,8 +87,7 @@ body {
 						session_start();
 						unset($result["password"]);
 						$_SESSION["user"] = $result;
-                        echo "<br>Welcome! You're logged in!<br>";
-						echo "<pre>" . var_export($_SESSION, true) . "</pre>";
+                        header("Location: home.php");
                     }
                     else{
                         echo "<br>Invalid password, try again<br>";

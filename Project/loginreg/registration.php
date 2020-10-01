@@ -74,16 +74,19 @@ body {
 			require_once("db.php");
 			$db = getDB();
 			if(isset($db)){
-				$stmt = $db->prepare("INSERT INTO TPUsers(email, password) VALUES(:email, :password)");
-				$params = array("email"=>$email, ":password"=>$hash);
+				//here we'll use placeholders to let PDO map and sanitize our data
+				$stmt = $db->prepare("INSERT INTO Users(email, password) VALUES(:email, :password)");
+				//here's the data map for the parameter to data
+				$params = array(":email"=>$email, ":password"=>$hash);
 				$r = $stmt->execute($params);
+				//let's just see what's returned
 				echo "db returned: " . var_export($r, true);
 				$e = $stmt->errorInfo();
 				if($e[0] == "00000"){
-					echo "<br>Welcome! You have successfully registered, please login.";
+					echo "<br>Welcome! You successfully registered, please login.";
 				}
 				else{
-					echo "Something went wrong: " . var_export($e,true);
+					echo "uh oh something went wrong: " . var_export($e, true);
 				}
 			}
 		}

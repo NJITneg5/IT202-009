@@ -72,8 +72,8 @@ body {
                     echo "uh oh something went wrong: " . var_export($e, true);
                 }
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($result && isset($result["password"])) {
-                    $password_hash_from_db = $result["password"];
+                if ($result && isset($result["pw"])) {
+                    $password_hash_from_db = $result["pw"];
                     if (password_verify($password, $password_hash_from_db)) {
                         $stmt = $db->prepare("
 SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.role_id where TPUserRoles.user_id = :user_id and TPRoles.is_active = 1 and TPUserRoles.is_active = 1");

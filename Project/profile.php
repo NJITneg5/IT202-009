@@ -133,7 +133,7 @@ if (isset($_POST["saved"])) {
 </nav>
 <h1>Simple Bank Profile</h1>
 
-<h3><?php echo $email; ?>'s Profile</h3>
+<h3><?php echo get_email(); ?>'s Profile</h3>
 
 <p>Change your info?</p>
 <form method="POST">

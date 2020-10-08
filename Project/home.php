@@ -29,7 +29,7 @@ if (isset($_SESSION["user"]) && isset($_SESSION["user"]["email"])) {
     <nav>
         <?php require_once(__DIR__ . "/partials/nav.php"); ?>
     </nav>
-
+    <h1>Simple Bank Homepage</h1>
     <p>Welcome, <?php echo $email; ?></p>
 
     <hr>

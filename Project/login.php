@@ -22,9 +22,9 @@ body {
     <nav><?php require_once(__DIR__ . "/partials/nav.php"); ?></nav>
 	<h1>Please Log in with your Email and password.</h1>
 	<form method = "POST">
-		<label for= "email">Email</label><br>
+		<label for= "email">Email:</label><br>
 		<input type= "email" id= "email" name= "email" required/><br>
-		<label for= "pw">Password</label><br>
+		<label for= "pw">Password:</label><br>
 		<input type= "password" id= "pw" name= "pw" required/><br>
 		<input type= "submit" name = "login" value= "Login"/><br>
 	</form>
@@ -45,32 +45,41 @@ body {
     if (isset($_POST["login"])) {
         $email = null;
         $password = null;
+
         if (isset($_POST["email"])) {
             $email = $_POST["email"];
         }
+
         if (isset($_POST["pw"])) {
             $password = $_POST["pw"];
         }
+
         $isValid = true;
         if (!isset($email) || !isset($password)) {
             $isValid = false;
         }
+
         if (!strpos($email, "@")) {
             $isValid = false;
             echo "<br>Invalid email<br>";
         }
+
         if ($isValid) {
+
             $db = getDB();
+
             if (isset($db)) {
-                $stmt = $db->prepare("SELECT id, email, password from TPUsers WHERE email = :email LIMIT 1");
+                $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE email = :email LIMIT 1");
 
                 $params = array(":email" => $email);
                 $r = $stmt->execute($params);
                 echo "db returned: " . var_export($r, true);
                 $e = $stmt->errorInfo();
+
                 if ($e[0] != "00000") {
                     echo "uh oh something went wrong: " . var_export($e, true);
                 }
+
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($result && isset($result["password"])) {
                     $password_hash_from_db = $result["password"];

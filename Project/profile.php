@@ -139,13 +139,17 @@ if (isset($_POST["saved"])) {
 <form method="POST">
     <label for="email">Email:</label><br>
     <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/><br><br>
+
     <label for="username">Username:</label><br>
     <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/><br><br>
+
     <!-- DO NOT PRELOAD PASSWORD-->
     <label for="pw">Password:</label><br>
     <input type="password" name="password"/><br><br>
+
     <label for="cpw">Confirm Password:</label><br>
-    <input type="password" name="confirm"/><br>
+    <input type="password" name="confirm"/><br><br>
+
     <input type="submit" name="saved" value="Save Profile"/>
 </form>
 

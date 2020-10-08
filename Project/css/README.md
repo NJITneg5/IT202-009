@@ -1,0 +1,1 @@
+This folder is to hold all of my css files used for different pages in the project.

@@ -26,7 +26,6 @@ body {
 	<ul>
 		<li><a href= "../loginreg/registration.php">Registration page</a></li>
 		<li><a href= "../loginreg/login.php">Login page</a></li>
-		<li><a href= "../dbTest.php">Database Test page</a></li><br>
 		<li><a href= "registration.php">Registration page for loginreg part 3</a></li>
 		<li><a href= "login.php">Login page for loginreg part 3</a></li>
 		<li><a href= "logout.php">Logout page for loginreg part 3</a></li>

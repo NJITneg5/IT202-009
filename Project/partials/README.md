@@ -1,0 +1,1 @@
+This folder is to hold any partial files that I may need for different pages like my nav bar.

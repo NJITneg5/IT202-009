@@ -12,13 +12,15 @@
 	<link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
 	<link rel="icon" href="bankIcon.jpg" type="image/gif" sizes="16x16">
 
-<style>
-body {
-    font-family: 'Average';
-}
-</style>
+    <style>
+    body {
+        font-family: 'Average';
+    }
+    </style>
 </head>
 <body>
+    <nav><?php require_once(__DIR__ . "/partials/nav.php"); ?></nav>
+
 	<h1>Please enter your the email and password you would like to use to Register.</h1>
 	<form method = "POST">
 		<label for= "email">Email</label><br>
@@ -71,7 +73,6 @@ body {
 		//TODO other validation as desired, remember this is the last line of defense
 		if($isValid){
 			$hash = password_hash($password, PASSWORD_BCRYPT);
-			require_once("../db.php");
 			$db = getDB();
 			if(isset($db)){
 				//here we'll use placeholders to let PDO map and sanitize our data

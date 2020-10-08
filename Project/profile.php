@@ -89,7 +89,7 @@ if (isset($_POST["saved"])) {
             }
         }
 //fetch/select fresh data in case anything changed
-        $stmt = $db->prepare("SELECT email, username from Users WHERE id = :id LIMIT 1");
+        $stmt = $db->prepare("SELECT email, username from TPUsers WHERE id = :id LIMIT 1");
         $stmt->execute([":id" => get_user_id()]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {

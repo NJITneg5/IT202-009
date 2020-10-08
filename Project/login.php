@@ -48,8 +48,8 @@ body {
         if (isset($_POST["email"])) {
             $email = $_POST["email"];
         }
-        if (isset($_POST["password"])) {
-            $password = $_POST["password"];
+        if (isset($_POST["pw"])) {
+            $password = $_POST["pw"];
         }
         $isValid = true;
         if (!isset($email) || !isset($password)) {
@@ -80,7 +80,7 @@ SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.ro
                         $stmt->execute([":user_id" => $result["id"]]);
                         $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        unset($result["password"]);//remove password so we don't leak it beyond this page
+                        unset($result["pw"]);//remove password so we don't leak it beyond this page
                         //let's create a session for our user based on the other data we pulled from the table
                         $_SESSION["user"] = $result;//we can save the entire result array since we removed password
                         if ($roles) {
@@ -93,7 +93,7 @@ SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.ro
                         header("Location: home.php");
                     }
                     else {
-                        echo "<br>Invalid password, get out!<br>";
+                        echo "<br>Invalid password, try again<br>";
                     }
                 }
                 else {

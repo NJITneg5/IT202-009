@@ -19,6 +19,7 @@ body {
 </style>
 </head>
 <body>
+<div class="bodyMain">
     <?php require_once(__DIR__ . "/partials/nav.php");?>
 <?php
 	session_unset();
@@ -35,6 +36,6 @@ body {
 	for Internet Applications Final Project.
 	Created October 2020
 	</address>
-
+</div>
 </body>
 </html>

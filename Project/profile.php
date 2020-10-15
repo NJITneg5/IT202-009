@@ -128,38 +128,37 @@ if (isset($_POST["saved"])) {
     </style>
 </head>
 <body>
-<nav>
     <?php require_once(__DIR__ . "/partials/nav.php"); ?>
-</nav>
-<h1>Simple Bank Profile</h1>
+    <div class="bodyMain">
+    <h1>Simple Bank Profile</h1>
 
-<h3><?php safer_echo(get_email()); ?>'s Profile</h3>
+    <h3><?php safer_echo(get_email()); ?>'s Profile</h3>
 
-<p>Change your info?</p>
-<form method="POST">
-    <label for="email">Email:</label><br>
-    <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/><br><br>
+    <p>Change your info?</p>
+    <form method="POST" id = "profileForm">
+        <label for="email">Email:</label><br>
+        <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/><br><br>
 
-    <label for="username">Username:</label><br>
-    <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/><br><br>
+        <label for="username">Username:</label><br>
+        <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/><br><br>
 
-    <!-- DO NOT PRELOAD PASSWORD-->
-    <label for="pw">Password:</label><br>
-    <input type="password" name="password"/><br><br>
+        <!-- DO NOT PRELOAD PASSWORD-->
+        <label for="pw">Password:</label><br>
+        <input type="password" name="password"/><br><br>
 
-    <label for="cpw">Confirm Password:</label><br>
-    <input type="password" name="confirm"/><br><br>
+        <label for="cpw">Confirm Password:</label><br>
+        <input type="password" name="confirm"/><br><br>
 
-    <input type="submit" name="saved" value="Save Profile"/>
-</form>
+        <input type="submit" name="saved" value="Save Profile"/>
+    </form>
 
-<hr>
+    <hr>
 
-<address>
-    Page made by Nate Gile <br>
-    for Internet Applications Final Project. <br>
-    Created October 2020<br>
-</address>
-
+    <address>
+    Page made by Nate Gile
+    for Internet Applications Final Project.
+    Created October 2020
+    </address>
+    </div>
 </body>
 </html>

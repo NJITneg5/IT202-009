@@ -1,0 +1,68 @@
+/*Navigation Bar Layout*/
+
+.navMain{
+    background-color: #e62e00;
+}
+
+#title{
+    color: #fff;
+    text-shadow: 3px 3px black;
+}
+
+.underline{
+    height: 25px;
+    background-color: #962e00;
+    border-radius: 0px 0px 15px 15px;
+}
+
+nav{
+    text-align:center;
+    padding: 0px;
+    padding-top:25px;
+    padding-bottom: 25px;
+}
+
+#genNav{
+    list-style:none;
+    margin:0px;
+}
+
+#genNav li{
+    display:inline-block;
+    padding-right:10%;
+}
+
+#genNav a{
+    text-decoration:none;
+    text-shadow: 2px 2px black;
+    padding: 5px;
+    color: yellow;
+    border: 3px outset orange;
+    border-radius: 25px;
+    /*background-image: url("button-bg.gif");*/ /*May be used later*/
+    background-color: #39f;
+}
+/*End of Navigation bar*/
+
+/*Body Layout*/
+
+body{
+    margin: 0px;
+    background-color: #ccc;
+    overflow: auto;
+}
+
+.bodyMain{
+    background-color: #fff;
+    padding-left:2%;
+    padding-right:2%;
+    margin-left:1%;
+    margin-right:1%;
+    border-radius: 15px;
+    margin-bottom: 1%
+}
+
+address{
+    text-align:center;
+    background-color: #eee;
+}

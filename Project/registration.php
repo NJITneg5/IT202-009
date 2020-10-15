@@ -100,18 +100,22 @@ if(!isset($username)) {
     </style>
 </head>
 <body>
-    <nav><?php require_once(__DIR__ . "/partials/nav.php"); ?></nav>
-
+    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
+    <div class="bodyMain">
 	<h1>Please enter your the email and password you would like to use to Register.</h1>
-	<form method = "POST">
+	<form method = "POST" id = "regForm">
 		<label for= "email">Email</label><br>
 		<input type= "email" id= "email" name= "email" required/><br>
+
         <label for= "user">Username:</label><br>
         <input type="text" id="user" name="username" required maxlength="60" value="<?php safer_echo($username);?>"/><br>
+
 		<label for= "pw">Password</label><br>
 		<input type= "password" id= "pw" name= "pw" required/><br>
+
 		<label for= "confirmPw">Confirm Password</label><br>
 		<input type= "password" id= "confirmPw" name= "confirmPw" required/><br>
+
 		<input type= "submit" name= "register" value= "Register"/>
 	</form>
 	
@@ -119,10 +123,10 @@ if(!isset($username)) {
 	<hr>
 	
 	<address>
-	Page made by Nate Gile <br>
-	for Internet Applications Final Project. <br>
-	Created September 2020<br>
+	Page made by Nate Gile
+	for Internet Applications Final Project.
+	Created October 2020
 	</address>
-
+    </div>
 </body>
 </html>

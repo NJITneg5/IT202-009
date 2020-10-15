@@ -26,19 +26,18 @@ if (isset($_SESSION["user"]) && isset($_SESSION["user"]["email"])) {
     </style>
 </head>
 <body>
-    <nav>
-        <?php require_once(__DIR__ . "/partials/nav.php"); ?>
-    </nav>
-    <h1>Simple Bank Homepage</h1>
-    <p>Welcome, <?php echo get_email(); ?></p>
+    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
+    <div class="bodyMain">
+        <h1>Simple Bank Homepage</h1>
+        <p>Welcome, <?php echo get_email(); ?></p>
 
-    <hr>
+        <hr>
 
-    <address>
-    Page made by Nate Gile <br>
-    for Internet Applications Final Project. <br>
-    Created September 2020<br>
-    </address>
-
+        <address>
+        Page made by Nate Gile
+        for Internet Applications Final Project.
+        Created October 2020
+        </address>
+    </div>
 </body>
 </html>

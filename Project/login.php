@@ -19,13 +19,16 @@ body {
 </style>
 </head>
 <body>
-    <nav><?php require_once(__DIR__ . "/partials/nav.php"); ?></nav>
+    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
+    <div class="bodyMain">
 	<h1>Please Log in with your Email and password.</h1>
-	<form method = "POST">
+	<form method = "POST" id ="loginForm">
 		<label for= "email">Email:</label><br>
 		<input type= "email" id= "email" name= "email" required/><br>
+
 		<label for= "pw">Password:</label><br>
 		<input type= "password" id= "pw" name= "pw" required/><br>
+
 		<input type= "submit" name = "login" value= "Login"/><br>
 	</form>
 	
@@ -33,11 +36,11 @@ body {
 	<hr>
 	
 	<address>
-	Page made by Nate Gile <br>
-	for Internet Applications Final Project. <br>
-	Created September 2020<br>
+	Page made by Nate Gile
+	for Internet Applications Final Project.
+	Created October 2020
 	</address>
-	
+    </div>
 	
 	<!--PHP Shenanigans -->
 

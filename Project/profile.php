@@ -5,7 +5,7 @@
 //As an exercise swap these two and see how things change
 if (!is_logged_in()) {
     //this will redirect to login and kill the rest of this script (prevent it from executing)
-    flash("You must be logged in to access this page.");
+    flash("You must be logged in to access this page");
     die(header("Location: login.php"));
 }
 
@@ -79,10 +79,10 @@ if (isset($_POST["saved"])) {
                 $password = $_POST["password"];
                 $hash = password_hash($password, PASSWORD_BCRYPT);
                 //this one we'll do separate
-                $stmt = $db->prepare("UPDATE Users set password = :password where id = :id");
+                $stmt = $db->prepare("UPDATE TPUsers set password = :password where id = :id");
                 $r = $stmt->execute([":id" => get_user_id(), ":password" => $hash]);
                 if ($r) {
-                    flash("Password has been reset");
+                    flash("Password has been reset.");
                 }
                 else {
                     flash("Error resetting password");
@@ -101,12 +101,7 @@ if (isset($_POST["saved"])) {
             $_SESSION["user"]["username"] = $username;
         }
     }
-    else {
-        //else for $isValid, though don't need to put anything here since the specific failure will output the message
-    }
 }
-
-
 ?>
 <!DOCTYPE HTML>
 

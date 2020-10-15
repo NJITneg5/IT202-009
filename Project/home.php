@@ -39,5 +39,6 @@ if (isset($_SESSION["user"]) && isset($_SESSION["user"]["email"])) {
         Created October 2020
         </address>
     </div>
+    <?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

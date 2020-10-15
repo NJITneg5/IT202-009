@@ -26,10 +26,10 @@ if(isset($_POST["register"])){
     $isValid = true;
     //check if passwords match on the server side
     if($password == $confirm){
-        echo "Passwords match <br>";
+        //flash("Passwords match");
     }
     else{
-        echo "Passwords don't match<br>";
+        flash("Passwords don't match");
         $isValid = false;
     }
 
@@ -53,20 +53,20 @@ if(isset($_POST["register"])){
             echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if($e[0] == "00000"){
-                echo "<br>Welcome! You successfully registered, please login.";
+                flash("Welcome! You successfully registered, please login.");
             }
             else{
                 if ($e[0] == "23000"){ //Duplicate entry code.
-                    echo "<br>Either username or email is already registered, please choose a different one.";
+                    flash("Username and/or email is already registered, please choose a different one.");
                 }
                 else {
-                    echo "uh oh something went wrong: " . var_export($e, true);
+                    flash("An error has occurred, please try again");
                 }
             }
         }
     }
     else{
-        echo "There was a validation issue";
+        flash("There was a validation issue");
     }
 }
 
@@ -128,5 +128,6 @@ if(!isset($username)) {
 	Created October 2020
 	</address>
     </div>
+    <?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

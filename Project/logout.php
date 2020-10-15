@@ -19,24 +19,17 @@ body {
 </style>
 </head>
 <body>
-    <?php require_once(__DIR__ . "/lib/helpers.php");?>
-<?php
-	session_unset();
-	// destroy the session
-	session_destroy(); ?>
-
+    <?php
+        session_start();
+        // remove all session variables
+        session_unset();
+        // destroy the session
+        session_destroy();
+    ?>
     <?php require_once(__DIR__ . "/partials/nav.php");?>
-    <div class ="bodyMain">
-	<?php echo "You're logged out.<br>"; ?>
-	<a href="home.php">Link back to the Home page</a>
-	
-	<hr>
-	
-	<address>
-	Page made by Nate Gile
-	for Internet Applications Final Project.
-	Created October 2020
-	</address>
-</div>
+    <?php
+        flash("You have been logged out");
+        die(header("Location: login.php"));
+    ?>
 </body>
 </html>

@@ -21,4 +21,4 @@ require_once(__DIR__ . "/../lib/helpers.php");
         </ul>
     </nav>
 </div>
-<div class="underline"></div>
+<div id ="underline"></div>

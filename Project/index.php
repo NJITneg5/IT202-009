@@ -32,5 +32,6 @@ body {
 	Created October 2020
 	</address>
     </div>
+    <?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

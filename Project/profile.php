@@ -1,10 +1,11 @@
 <?php
-require_once(__DIR__ . "/lib/helpers.php");
+    require_once(__DIR__ . "/partials/nav.php");
 //Note: we have this up here, so our update happens before our get/fetch
 //that way we'll fetch the updated data and have it correctly reflect on the form below
 //As an exercise swap these two and see how things change
 if (!is_logged_in()) {
     //this will redirect to login and kill the rest of this script (prevent it from executing)
+    flash("You must be logged in to access this page.");
     die(header("Location: login.php"));
 }
 
@@ -30,7 +31,7 @@ if (isset($_POST["saved"])) {
             }
         }
         if ($inUse > 0) {
-            echo "Email is already in use";
+            flash("Email is already in use");
             //for now we can just stop the rest of the update
             $isValid = false;
         }
@@ -54,7 +55,7 @@ if (isset($_POST["saved"])) {
             }
         }
         if ($inUse > 0) {
-            echo "Username is already in use";
+            flash("Username is already in use");
             //for now we can just stop the rest of the update
             $isValid = false;
         }
@@ -66,10 +67,10 @@ if (isset($_POST["saved"])) {
         $stmt = $db->prepare("UPDATE TPUsers set email = :email, username= :username where id = :id");
         $r = $stmt->execute([":email" => $newEmail, ":username" => $newUsername, ":id" => get_user_id()]);
         if ($r) {
-            echo "Updated profile";
+            flash("Updated profile");
         }
         else {
-            echo "Error updating profile";
+            flash("Error updating profile");
         }
         //password is optional, so check if it's even set
         //if so, then check if it's a valid reset request
@@ -81,10 +82,10 @@ if (isset($_POST["saved"])) {
                 $stmt = $db->prepare("UPDATE Users set password = :password where id = :id");
                 $r = $stmt->execute([":id" => get_user_id(), ":password" => $hash]);
                 if ($r) {
-                    echo "Reset password";
+                    flash("Password has been reset");
                 }
                 else {
-                    echo "Error resetting password";
+                    flash("Error resetting password");
                 }
             }
         }
@@ -128,7 +129,6 @@ if (isset($_POST["saved"])) {
     </style>
 </head>
 <body>
-    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
     <div class="bodyMain">
     <h1>Simple Bank Profile</h1>
 
@@ -160,5 +160,6 @@ if (isset($_POST["saved"])) {
     Created October 2020
     </address>
     </div>
+    <?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

@@ -76,11 +76,12 @@ body {
 
                 $params = array(":email" => $email);
                 $r = $stmt->execute($params);
-                echo "db returned: " . var_export($r, true);
+                //echo "db returned: " . var_export($r, true);
                 $e = $stmt->errorInfo();
 
                 if ($e[0] != "00000") {
-                    echo "uh oh something went wrong: " . var_export($e, true);
+                    //echo "uh oh something went wrong: " . var_export($e, true);
+                    flash("Something went wrong. Please try again.");
                 }
 
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -102,21 +103,23 @@ SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.ro
                             $_SESSION["user"]["roles"] = [];
                         }
                         //on successful login let's serve-side redirect the user to the home page.
-                        header("Location: home.php");
+                        flash("Log in Successful.");
+                        die(header("Location: home.php"));
                     }
                     else {
-                        echo "<br>Invalid password, try again<br>";
+                        flash("Invalid password, try again");
                     }
                 }
                 else {
-                    echo "<br>Invalid user<br>";
+                    flash("Invalid user");
                 }
             }
         }
         else {
-            echo "There was a validation issue";
+            flash("There was a validation issue");
         }
     }
     ?>
+    <?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

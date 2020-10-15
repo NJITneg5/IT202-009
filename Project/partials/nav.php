@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../lib/helpers.php");
 ?>
 <div class = "navMain">
-    <h3 id="title">A Simple Man's Bank</h3>
+    <h1 id="title">A Simple Man's Bank</h1>
     <nav>
         <ul id="genNav">
             <li><a href="home.php">Home</a></li>

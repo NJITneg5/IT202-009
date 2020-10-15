@@ -7,6 +7,7 @@
 #title{
     color: #fff;
     text-shadow: 3px 3px black;
+    margin:0px;
 }
 
 .underline{
@@ -18,21 +19,19 @@
 nav{
     text-align:center;
     padding: 0px;
-    padding-top:25px;
-    padding-bottom: 25px;
 }
 
-#genNav{
+#genNav, #loggedNav{
     list-style:none;
     margin:0px;
 }
 
-#genNav li{
+#genNav li, #genNav li{
     display:inline-block;
     padding-right:10%;
 }
 
-#genNav a{
+#genNav a, #loggedNav a{
     text-decoration:none;
     text-shadow: 2px 2px black;
     padding: 5px;

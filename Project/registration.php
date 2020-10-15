@@ -89,8 +89,8 @@ if(!isset($username)) {
 	<meta name="date" content="9/24/2020">
 	<meta name="keywords" content="">
     <title>Gile Family Bank</title>
-    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
-	<link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
 	<link rel="icon" href="bankIcon.jpg" type="image/gif" sizes="16x16">
 
     <style>

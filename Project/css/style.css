@@ -8,6 +8,7 @@
     color: #fff;
     text-shadow: 3px 3px black;
     margin:0;
+    text-align: left;
 }
 
 #underline{
@@ -18,7 +19,7 @@
 
 nav{
     text-align:center;
-    padding: 0 0 25px;
+    padding: 25px 0 25px 0;
 }
 
 #genNav, #loggedNav{
@@ -26,9 +27,14 @@ nav{
     margin:0;
 }
 
-#genNav li, #loggedNav li{
+#genNav li{
     display:inline-block;
     padding-right:10%;
+}
+
+#loggedNav li{
+    text-align:right;
+    padding-bottom: 20px;
 }
 
 #genNav a, #loggedNav a{

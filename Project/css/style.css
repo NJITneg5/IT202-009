@@ -33,7 +33,9 @@ nav{
 }
 
 #loggedNav li{
-    text-align:right;
+    position: absolute;
+    right: 10px;
+    top: 5px;
     padding-bottom: 20px;
 }
 

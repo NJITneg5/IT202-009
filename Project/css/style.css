@@ -22,7 +22,7 @@ nav{
     padding: 25px 0 25px 0;
 }
 
-#genNav, #loggedNav{
+#genNav{
     list-style:none;
     margin:0;
 }
@@ -32,10 +32,12 @@ nav{
     padding-right:10%;
 }
 
-#loggedNav li{
+#loggedNav{
     position: absolute;
     right: 10px;
     top: 5px;
+}
+#loggedNav li{
     padding-bottom: 20px;
 }
 

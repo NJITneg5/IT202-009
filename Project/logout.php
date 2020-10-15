@@ -19,14 +19,15 @@ body {
 </style>
 </head>
 <body>
-<div class="bodyMain">
-    <?php require_once(__DIR__ . "/partials/nav.php");?>
+    <?php require_once(__DIR__ . "/lib/helpers.php");?>
 <?php
 	session_unset();
 	// destroy the session
-	session_destroy();
-	echo "You're logged out.<br>";
-?>
+	session_destroy(); ?>
+
+    <?php require_once(__DIR__ . "/partials/nav.php");?>
+    <div class ="bodyMain">
+	<?php echo "You're logged out.<br>"; ?>
 	<a href="home.php">Link back to the Home page</a>
 	
 	<hr>

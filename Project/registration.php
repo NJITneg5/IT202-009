@@ -1,5 +1,5 @@
 <!--PHP Shenanigans-->
-
+<?php require_once(__DIR__ . "/partials/nav.php"); ?>
 <?php
 if(isset($_POST["register"])){
     $email = null;
@@ -100,7 +100,6 @@ if(!isset($username)) {
     </style>
 </head>
 <body>
-    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
     <div class="bodyMain">
 	<h1>Please enter your the email and password you would like to use to Register.</h1>
 	<form method = "POST" id = "regForm">

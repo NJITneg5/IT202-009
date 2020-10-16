@@ -67,6 +67,7 @@ body {
             flash("$password did not set");
         }
         $isValid = true;
+
         if (!isset($userEmail) || !isset($password)) {
             $isValid = false;
         }
@@ -88,7 +89,7 @@ body {
             flash("$email did not set and is now $user");
         }
 
-        if(!isset($email) || !isset($user)){
+        if(!isset($email) && !isset($user)){
             $isValid = false;
         }
         else{

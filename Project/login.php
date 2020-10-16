@@ -24,7 +24,7 @@ body {
 	<h1>Please Log in with your Email or Username and password.</h1>
 	<form method = "POST" id ="loginForm">
 		<label for= "userEmail">Username/Email:</label><br>
-		<input type= "text" id= "userEmail" name= "email" required/><br>
+		<input type= "text" id= "userEmail" name= "userEmail" required/><br>
 
 		<label for= "pw">Password:</label><br>
 		<input type= "password" id= "pw" name= "pw" required/><br>

@@ -21,10 +21,10 @@ body {
 <body>
     <?php require_once(__DIR__ . "/partials/nav.php"); ?>
     <div class="bodyMain">
-	<h1>Please Log in with your Email and password.</h1>
+	<h1>Please Log in with your Email or Username and password.</h1>
 	<form method = "POST" id ="loginForm">
-		<label for= "email">Email:</label><br>
-		<input type= "email" id= "email" name= "email" required/><br>
+		<label for= "userEmail">Username/Email:</label><br>
+		<input type= "text" id= "userEmail" name= "email" required/><br>
 
 		<label for= "pw">Password:</label><br>
 		<input type= "password" id= "pw" name= "pw" required/><br>
@@ -46,11 +46,13 @@ body {
 
     <?php
     if (isset($_POST["login"])) {
+        $userEmail = null;
+        $user = null;
         $email = null;
         $password = null;
 
-        if (isset($_POST["email"])) {
-            $email = $_POST["email"];
+        if (isset($_POST["userEmail"])) {
+            $userEmail = $_POST["userEmail"];
         }
 
         if (isset($_POST["pw"])) {
@@ -62,19 +64,27 @@ body {
             $isValid = false;
         }
 
-        if (!strpos($email, "@")) {
+        /*if (!strpos($email, "@")) {
             $isValid = false;
             echo "<br>Invalid email<br>";
-        }
+        }*/
 
         if ($isValid) {
 
             $db = getDB();
 
             if (isset($db)) {
-                $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE email = :email LIMIT 1");
+                if(strpos($userEmail, "@")) {
+                    $email = $userEmail;
+                    $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE email = :email LIMIT 1");
+                    $params = array(":email" => $email);
+                }
+                else{
+                    $user = $userEmail;
+                    $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE username = :user LIMIT 1");
+                    $params = array(":user" => $user);
+                }
 
-                $params = array(":email" => $email);
                 $r = $stmt->execute($params);
                 //echo "db returned: " . var_export($r, true);
                 $e = $stmt->errorInfo();

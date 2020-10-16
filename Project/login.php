@@ -70,18 +70,17 @@ body {
         foreach($endings as $end) {
             if (strpos($userEmail, "@") && strpos($userEmail, $end)) {
                 $email = $userEmail;
-                $isValid = true;
                 break;
             }
-            else { $isValid = false; }
         }
 
-        if ($email = null) {
+        if (!isset($email)) {
             $user = $userEmail;
-            $isValid = true;
         }
-        else{ $isValid = false; }
 
+        if(!isset($email) || !isset($user)){
+            $isValid = false;
+        }
 
         if ($isValid) {
 

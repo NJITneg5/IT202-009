@@ -57,22 +57,15 @@ body {
         if (isset($_POST["userEmail"])) {
             $userEmail = $_POST["userEmail"];
         }
-        else{
-            flash("$userEmail did not set");
-        }
+
         if (isset($_POST["pw"])) {
             $password = $_POST["pw"];
         }
-        else{
-            flash("$password did not set");
-        }
+
         $isValid = true;
 
         if (!isset($userEmail) || !isset($password)) {
             $isValid = false;
-        }
-        else{
-            flash("Both $userEmail and $password are set and are valid");
         }
 
         foreach($endings as $end) {
@@ -85,15 +78,9 @@ body {
         if (!isset($email)) {
             $user = $userEmail;
         }
-        else{
-            flash("$email did not set and is now $user");
-        }
 
         if(!isset($email) && !isset($user)){
             $isValid = false;
-        }
-        else{
-            flash("Either $user or $email is set and $isValid should be true");
         }
 
         if ($isValid) {

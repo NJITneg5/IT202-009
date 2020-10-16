@@ -50,6 +50,9 @@ body {
         $user = null;
         $email = null;
         $password = null;
+        $stmt = null;
+        $params = null;
+        $endings = [".com", ".org", ".net", ".int",".edu",".gov",".mil"];
 
         if (isset($_POST["userEmail"])) {
             $userEmail = $_POST["userEmail"];
@@ -64,22 +67,29 @@ body {
             $isValid = false;
         }
 
-        /*if (!strpos($email, "@")) {
-            $isValid = false;
-            echo "<br>Invalid email<br>";
-        }*/
+        foreach($endings as $end) {
+            if (strpos($userEmail, "@") && strpos($userEmail, $end)) {
+                $email = $userEmail;
+                break;
+            }
+        }
+
+        if ($email = null) {
+            $user = $userEmail;
+        }
+
 
         if ($isValid) {
 
             $db = getDB();
 
             if (isset($db)) {
-                if(strpos($userEmail, "@")) {
+                if($email != null) {
                     $email = $userEmail;
                     $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE email = :email LIMIT 1");
                     $params = array(":email" => $email);
                 }
-                else{
+                elseif ($user != null) {
                     $user = $userEmail;
                     $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE username = :user LIMIT 1");
                     $params = array(":user" => $user);
@@ -121,7 +131,7 @@ SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.ro
                     }
                 }
                 else {
-                    flash("Invalid user");
+                    flash("Invalid username or email");
                 }
             }
         }

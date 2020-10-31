@@ -42,6 +42,7 @@ if(!has_role("Admin")) {
             </select> <br><br>
         </label>
         <label>Initial Balance<br>
+            <!--TODO Change type from number to text and add proper validation for currency-->
             <input name="initBalance" type="number" placeholder="00.00"><br><br>
         </label>
         <input type="submit" name="submit" value="Create">
@@ -68,7 +69,7 @@ if(isset($_POST["submit"])){
     $initBalance = $_POST["initBalance"];
     $user = get_user_id();
     $db = getDB();
-    $stmt = $db->prepare("INSERT INTO TPACCOUNTS (account_number, account_type, balance, user_id) VALUES(:accountNum, :accountType, :initBalance, :userID)");
+    $stmt = $db->prepare("INSERT INTO TPAccounts (account_number, account_type, balance, user_id) VALUES(:accountNum, :accountType, :initBalance, :userID)");
     $r = $stmt ->execute([
         ":accountNum"=>$accountNum,
         ":accountType"=>$accountType,

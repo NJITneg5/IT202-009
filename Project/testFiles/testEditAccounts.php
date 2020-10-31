@@ -22,7 +22,8 @@ if(isset($_POST["edit"])){
         $r = $stmt->execute([
             ":accountNum" => $accountNum,
             ":accountType" => $accountType,
-            ":balance" => $balance
+            ":balance" => $balance,
+            ":id" => $id
         ]);
         if ($r) {
             flash("Account created successfully with Account Number: " . $accountNum);

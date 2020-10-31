@@ -22,8 +22,7 @@ if(isset($_POST["edit"])){
         $r = $stmt->execute([
             ":accountNum" => $accountNum,
             ":accountType" => $accountType,
-            ":balance" => $balance,
-            ":userID" => $user
+            ":balance" => $balance
         ]);
         if ($r) {
             flash("Account created successfully with Account Number: " . $accountNum);
@@ -86,7 +85,7 @@ if(isset($id)){
         <label>Initial Balance<br>
             <input name="balance" type="number" placeholder="00.00" value="<?php echo $result["balance"];?>"><br><br>
         </label>
-        <input type="submit" name="edit" value="Create">
+        <input type="submit" name="edit" value="Update">
         <input type="reset" value="Reset">
 
     </form>

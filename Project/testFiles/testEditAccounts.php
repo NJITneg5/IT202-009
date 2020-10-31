@@ -74,7 +74,7 @@ if(isset($id)){
 
     <form method="POST">
         <label>Account Number <br>
-            <input name="accountNum" type="number" min="100000000000" max="999999999999" placeholder="000000000000" value="<?php echo $result["name"];?>"> <br><br>
+            <input name="accountNum" type="number" min="100000000000" max="999999999999" placeholder="000000000000" value="<?php echo $result["account_num"];?>"> <br><br>
         </label>
         <label>Account Type <br>
             <select name="accountType" value="<?php echo $result["account_type"]?>">

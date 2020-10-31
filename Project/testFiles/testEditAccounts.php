@@ -26,7 +26,7 @@ if(isset($_POST["edit"])){
             ":id" => $id
         ]);
         if ($r) {
-            flash("Account created successfully with Account Number: " . $accountNum);
+            flash("Account updated successfully with Account Number: " . $accountNum);
         } else {
             $e = $stmt->errorInfo();
             flash("There was an error!" . var_export($e, true));

@@ -11,11 +11,12 @@ require_once(__DIR__ . "/../lib/helpers.php");
             <li style = "padding-left: 10%"><a href="login.php">Login</a></li>
             <li style = "padding: 0"><a href="registration.php">Register</a></li>
             <?php endif; ?>
+            <!--
             <?php if (has_role("Admin")): ?>
             <li style = "padding-left: 10%"><a href="testFiles/testCreateAccounts.php">Create Accounts</a></li>
             <li style = "padding: 0"><a href="testFiles/testListAccounts.php">Query Accounts</a></li>
             <?php endif; ?>
-
+            -->
         </ul>
 
         <ul id="loggedNav">

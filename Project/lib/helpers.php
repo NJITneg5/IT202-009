@@ -68,4 +68,11 @@ function getMessages() {
 }
 
 //end flash
-?>
+
+//Nav Bar function for better pathing
+function getURL($path){
+    if(substr($path, 0, 1) == "/"){
+        return $path;
+    }
+    return __DIR__ . "/$path";
+}

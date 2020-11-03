@@ -55,7 +55,7 @@ if(isset($id)){
         <div class="cardBody">
             <div>
                 <p>Account Details</p>
-                <div>Owner Username: <?php safer_echo($result["TPUsers.username"]); ?></div>
+                <div>Owner Username: <?php safer_echo($result["username"]); ?></div>
                 <div>Account Type: <?php safer_echo($result["account_type"]); ?></div>
                 <div>Account Balance: <?php safer_echo($result["balance"]); ?></div>
                 <div>Account Opened: <?php safer_echo($result["opened_date"]); ?></div>

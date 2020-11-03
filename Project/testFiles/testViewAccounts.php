@@ -13,7 +13,8 @@ if(isset($_GET["id"])){
 $result = [];
 if(isset($id)){
     $db = getDB();
-    $stmt = $db->prepare("SELECT TPAccounts.id, account_number, account_type, opened_date, last_updated, balance, TPUsers.username FROM TPAccounts as TPA JOIN TPUsers on TPA.user_id = TPUsers.user_id WHERE TPA.id = :id");
+    $stmt = $db->prepare("SELECT TPA.id, account_number, account_type, opened_date, last_updated, balance, TPUsers.username FROM TPAccounts 
+                                    as TPA JOIN TPUsers on TPA.user_id = TPUsers.user_id WHERE TPA.id = :id");
     $r = $stmt->execute([":id" => $id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$result) {

@@ -50,6 +50,7 @@ if(isset($id)){
 <?php if(isset($result) && !empty($result)): ?>
     <div class="card">
         <div class="cardTitle">
+            <p>Account details for Account Number:</p>
             <?php safer_echo($result["account_number"]); ?>
         </div>
         <div class="cardBody">

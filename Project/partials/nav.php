@@ -6,22 +6,22 @@ require_once(__DIR__ . "/../lib/helpers.php");
     <h1 id="title">A Simple Man's Bank</h1>
     <nav>
         <ul id="genNav">
-            <li style = "padding: 0"><a href="home.php">Home</a></li>
+            <li style = "padding: 0"><a href="<?php echo (__DIR__ . "/");?>home.php">Home</a></li>
             <?php if (!is_logged_in()): ?>
-            <li style = "padding-left: 10%"><a href="login.php">Login</a></li>
-            <li style = "padding: 0"><a href="registration.php">Register</a></li>
+            <li style = "padding-left: 10%"><a href="<?php echo (__DIR__ . "/");?>login.php">Login</a></li>
+            <li style = "padding: 0"><a href="<?php echo (__DIR__ . "/");?>;?>registration.php">Register</a></li>
             <?php endif; ?>
             <?php if (has_role("Admin")): ?>
-            <li style = "padding-left: 10%"><a href="testCreateAccounts.php">Create Accounts</a></li>
-            <li style = "padding: 0"><a href="testListAccounts.php">Query Accounts</a></li>
+            <li style = "padding-left: 10%"><a href="<?php echo (__DIR__ . "/");?>testFiles/testCreateAccounts.php">Create Accounts</a></li>
+            <li style = "padding: 0"><a href="<?php echo (__DIR__ . "/");?>testFiles/testListAccounts.php">Query Accounts</a></li>
             <?php endif; ?>
 
         </ul>
 
         <ul id="loggedNav">
             <?php if (is_logged_in()): ?>
-                <li><a href="profile.php">Profile</a></li>
-                <li><a href="logout.php">Logout</a></li>
+                <li><a href="<?php echo (__DIR__ . "/");?>profile.php">Profile</a></li>
+                <li><a href="<?php echo (__DIR__ . "/");?>logout.php">Logout</a></li>
             <?php endif; ?>
         </ul>
     </nav>

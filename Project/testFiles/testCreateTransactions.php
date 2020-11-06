@@ -66,7 +66,7 @@
         </label>
         <label>Amount<br>
             <!--TODO Change type from number to text and add proper validation for currency-->
-            <input name="amount" type="number" placeholder="00.00"><br><br>
+            <input name="amount" type="number" min="0" placeholder="00.00"><br><br>
         </label>
         <input type="submit" name="submit" value="Create">
         <input type="reset" value="Reset">

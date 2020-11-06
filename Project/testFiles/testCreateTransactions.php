@@ -179,7 +179,7 @@
 
         //Query to insert source side of transaction. The source and dest are flipped so that the transactions properly mirror each other.
         if ($failsafe) {
-            $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:acctSrc, :destDrc, :amount, :actionType, :memo, :expected)");
+            $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :amount, :actionType, :memo, :expected)");
             $r = $stmt->execute([
                 ":acctSrc" => $destID,
                 ":acctDest" => $srcID,

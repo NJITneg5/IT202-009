@@ -14,7 +14,7 @@ if(isset($_POST["query"])){
 
 if(isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT id, account_number, user_id, account_type, opened_date, last_updated, balance FROM TPAccounts WHERE account_number LIKE :q LIMIT 10");
+    $stmt = $db->prepare("SELECT id, account_number, account_type, opened_date FROM TPAccounts WHERE account_number LIKE :q LIMIT 10");
     $r = $stmt->execute([":q" => "%$query%"]);
     if ($r){
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -76,8 +76,8 @@ if(isset($_POST["search"]) && !empty($query)) {
                             <div><?php safer_echo($r["opened_date"]); ?></div>
                         </div>
                         <div>
-                            <a type="button" href="testEditAccounts.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
-                            <a type="button" href="testViewAccounts.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                            <a href="testEditAccounts.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
+                            <a href="testViewAccounts.php?id=<?php safer_echo($r['id']); ?>">View</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

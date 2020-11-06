@@ -62,7 +62,7 @@
                     <option value="<?php safer_echo($account["id"]); ?>"
                     ><?php safer_echo($account["account_number"]); ?></option>
                 <?php endforeach;?>
-            </select> <br><br><br><br>
+            </select> <br><br>
         </label>
         <label>Amount<br>
             <!--TODO Change type from number to text and add proper validation for currency-->
@@ -132,20 +132,28 @@
             }
         }
 
+        //Casting the strings to ints
+        $srcBalance = (int)$srcBalance;
+        $destBalance = (int)$destBalance;
+        $amount = (int)$amount;
+
         //Set of if statements to set expected_balance according to actionType
         if ($actionType == "deposit") {
             $srcExpect = $srcBalance - $amount;
             $srcAmt = $amount * -1;
+
             $destExpect = $destBalance + $amount;
             $destAmt = $amount;
         } elseif ($actionType == "withdrawal") {
             $srcExpect = $srcBalance + $amount;
             $srcAmt = $amount;
+
             $destExpect = $destBalance - $amount;
             $destAmt = $amount * -1;
         } elseif ($actionType == "transfer") {
             $srcExpect = $srcBalance - $amount;
             $srcAmt = $amount * -1;
+
             $destExpect = $destBalance + $amount;
             $destAmt = $amount;
         }

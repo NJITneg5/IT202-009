@@ -48,7 +48,7 @@ if(isset($srcTrans)){
 //Fetching the destination side of the transaction
 $destResult = [];
 if(isset($destTrans)){
-    $stmt = $db->prepare("SELECT * FROM TPTranscations WHERE id = :id");
+    $stmt = $db->prepare("SELECT * FROM TPTransactions WHERE id = :id");
     $r = $stmt->execute([":id"=>$destTrans]);
     $destResult = $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -62,7 +62,7 @@ if($srcResult["act_src_id"] == $destResult["act_dest_id"] && $srcResult["act_des
 } else{
     //Attempt to check the other side of the transID to find the pair.
     $destTrans = $srcTrans - 1;
-    $stmt = $db->prepare("SELECT * FROM TPTranscations WHERE id = :id");
+    $stmt = $db->prepare("SELECT * FROM TPTransactions WHERE id = :id");
     $r = $stmt->execute([":id"=>$destTrans]);
     $destResult = $stmt->fetch(PDO::FETCH_ASSOC);
 

@@ -15,7 +15,6 @@ if(isset($_POST["edit"])){
     $accountNum = $_POST["accountNum"];
     $accountType = $_POST["accountType"];
     $balance = $_POST["balance"];
-    $user = get_user_id();
     $db = getDB();
     if(isset($id)) {
         $stmt = $db->prepare("UPDATE TPAccounts set account_number=:accountNum, account_type=:accountType, balance=:balance WHERE id=:id");
@@ -29,7 +28,7 @@ if(isset($_POST["edit"])){
             flash("Account updated successfully with Account Number: " . $accountNum);
         } else {
             $e = $stmt->errorInfo();
-            flash("There was an error!" . var_export($e, true));
+            flash("There was an error! " . var_export($e, true));
         }
     }
     else{
@@ -77,13 +76,13 @@ if(isset($id)){
             <input name="accountNum" type="number" min="100000000000" max="999999999999" placeholder="000000000000" value="<?php echo $result["account_number"];?>"> <br><br>
         </label>
         <label>Account Type <br>
-            <select name="accountType" value="<?php echo $result["account_type"]?>">
+            <select name="accountType" value="<?php echo $result["account_type"];?>">
                 <option value="checking" <?php echo ($result["account_type"] == "checking"?'selected="selected"':'');?>>Checking</option>
                 <option value="savings" <?php echo ($result["account_type"] == "savings"?'selected="selected"':'');?>>Savings</option>
                 <option value="loan" <?php echo ($result["account_type"] == "loan"?'selected="selected"':'');?>>Loan</option>
             </select> <br><br>
         </label>
-        <label>Initial Balance<br>
+        <label>Balance<br>
             <input name="balance" type="number" placeholder="00.00" value="<?php echo $result["balance"];?>"><br><br>
         </label>
         <input type="submit" name="edit" value="Update">

@@ -73,9 +73,9 @@ if(isset($transId)){
             <div class="cardBody">
                 <div>
                     <div>Source Account: <?php safer_echo($transResult["act_src_id"]); ?></div>
-                    <div>Belonging to: <?php safer_echo($srcResult["TPUsers.username"]); ?></div> <br>
+                    <div>Belonging to: <?php safer_echo($srcResult["username"]); ?></div> <br>
                     <div>Destination Account: <?php safer_echo($transResult["act_dest_id"]); ?></div>
-                    <div>Belonging to: <?php safer_echo($destResult["TPUsers.username"]); ?></div> <br>
+                    <div>Belonging to: <?php safer_echo($destResult["username"]); ?></div> <br>
                     <div>Action Type: <?php safer_echo($transResult["action_type"]); ?></div>
                     <div>Amount Moved: <?php safer_echo($transResult["amount"]); ?></div>
                     <div>Memo: <?php safer_echo($transResult["memo"]); ?></div>

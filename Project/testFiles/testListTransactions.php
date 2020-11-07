@@ -33,6 +33,7 @@ if(isset($_POST["query"])){
     $query = $_POST["query"];
 }
 
+//TODO Fix this so that it returns actual account numbers in the query, not the internal id.
 if(isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
     $stmt = $db->prepare("SELECT id, act_src_id, act_dest_id, amount, action_type, memo FROM TPTransactions WHERE act_src_id LIKE :q LIMIT 10");
@@ -47,7 +48,7 @@ if(isset($_POST["search"]) && !empty($query)) {
 ?>
 <div class="bodyMain">
     <h1><strong>TEST PAGE</strong></h1>
-    <h3>This page is used to query transactions</h3>
+    <h3>This page is used to query transactions (For now, it uses the internal ID's for accounts)</h3>
 
     <form method="POST">
         <label> Partial Account Number <br>
@@ -63,11 +64,11 @@ if(isset($_POST["search"]) && !empty($query)) {
                 <?php foreach ($results as $r): ?>
                     <div class="list-group-item">
                         <div>
-                            <div>Source Account Number:</div>
+                            <div>Source Account ID:</div>
                             <div><?php safer_echo($r["act_src_id"]); ?></div>
                         </div>
                         <div>
-                            <div>Destination Account Number:</div>
+                            <div>Destination Account ID:</div>
                             <div><?php safer_echo($r["act_dest_id"]); ?></div>
                         </div>
                         <div>

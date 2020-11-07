@@ -65,7 +65,7 @@ if(isset($transId)){
     <h1><strong>TEST PAGE</strong></h1>
     <h3>This page is used to view details of an transaction</h3>
 
-    <?php if(isset($result) && !empty($result)): ?>
+    <?php if(isset($destResult) && !empty($destResult)): ?>
         <div class="card">
             <div class="cardTitle">
                 <p>Details for Transaction:</p>

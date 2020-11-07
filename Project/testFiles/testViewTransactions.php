@@ -44,7 +44,7 @@ if(isset($transId)){
         flash("Error fetching transaction info: " . var_export($e, true));
     }
 
-    $stmt = $db->prepare("SELECT TPA.id, account_number, TPUsers.username FROM TPAccounts as TPA JOIN TPUsers on TPA.user_id = TPUsers.id WHERE TPA.account_number = :number");
+    $stmt = $db->prepare("SELECT TPA.id, account_number, TPUsers.username FROM TPAccounts as TPA JOIN TPUsers on TPA.user_id = TPUsers.id WHERE TPA.id = :number");
     $r = $stmt->execute([":number" => $transResult["act_src_id"]]);
     $srcResult = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$srcResult) {
@@ -52,7 +52,7 @@ if(isset($transId)){
         flash("Error fetching source info: " . var_export($e, true));
     }
 
-    $stmt = $db->prepare("SELECT TPA.id, account_number, TPUsers.username FROM TPAccounts as TPA JOIN TPUsers on TPA.user_id = TPUsers.id WHERE TPA.account_number = :number");
+    $stmt = $db->prepare("SELECT TPA.id, account_number, TPUsers.username FROM TPAccounts as TPA JOIN TPUsers on TPA.user_id = TPUsers.id WHERE TPA.id = :number");
     $r = $stmt->execute([":number" => $transResult["act_dest_id"]]);
     $destResult = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$destResult) {

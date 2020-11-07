@@ -51,7 +51,7 @@ if(isset($_POST["search"]) && !empty($query)) {
     <h3>This page is used to query transactions (For now, it uses the internal ID's for accounts)</h3>
 
     <form method="POST">
-        <label> Partial Account Number <br>
+        <label> Internal Account ID <br>
             <input name="query" placeholder="Search" value="<?php safer_echo($query);?>"/>
         </label>
         <input type="submit" value="Search" name="search"/>

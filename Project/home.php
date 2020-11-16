@@ -30,7 +30,7 @@
             <li><a href="#">Deposit</a></li>
             <li><a href="#">Withdrawal</a></li>
             <li><a href="#">Transfer</a></li>
-            <li><a href="<?php getURL("profile.php")?>">Profile</a></li>
+            <li><a href="<?php echo getURL("profile.php")?>">Profile</a></li>
         </ul>
         <hr>
 

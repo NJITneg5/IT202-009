@@ -1,10 +1,3 @@
-<?php
-//we use this to safely get the email to display
-$email = "";
-if (isset($_SESSION["user"]) && isset($_SESSION["user"]["email"])) {
-    $email = $_SESSION["user"]["email"];
-}
-?>
 <!DOCTYPE HTML>
 
 <html lang="en">
@@ -28,9 +21,17 @@ if (isset($_SESSION["user"]) && isset($_SESSION["user"]["email"])) {
 <body>
     <?php require_once(__DIR__ . "/partials/nav.php"); ?>
     <div class="bodyMain">
-        <h1>Simple Bank Homepage</h1>
-        <p>Welcome, <?php echo get_email(); ?></p>
-
+        <h1>Simple Bank Dashboard</h1>
+        <h4>Welcome, <?php echo get_email(); ?></h4>
+        <p>How would you like to conduct business with us today:</p>
+        <ul class="dashLinks">
+            <li><a href="#">Create Account</a></li>
+            <li><a href="#">My Accounts</a></li>
+            <li><a href="#">Deposit</a></li>
+            <li><a href="#">Withdrawal</a></li>
+            <li><a href="#">Transfer</a></li>
+            <li><a href="<?php echo getURL("profile.php")?>">Profile</a></li>
+        </ul>
         <hr>
 
         <address>

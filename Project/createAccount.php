@@ -61,7 +61,18 @@ if(isset($_POST["submit"])){
     $isValid = false;       //Check for inserts
     $uniqueNum = false;     //Check to make sure account number is available
     $uniqueCount = 0;       //Makes sure that the unique account check only runs a certain amount of times
-    while(!$uniqueNum && $uniqueCount < 10) {    //Loop to generate a unique account number
+
+    $accountType = $_POST["accountType"];
+    $initBalance = $_POST["initBalance"];
+    $user = get_user_id();
+
+    if((float)$initBalance >= 5.0){ //Checks to make sure that the initial balance variable can be stripped to float and is greater than or equal to 5.0
+        $isValid = true;
+    }else{
+        flash("You did not enter a valid initial deposit. Please Try again.");
+    }
+
+    while(!$uniqueNum && $uniqueCount < 10 && $isValid) {    //Loop to generate a unique account number
         $newActNum = rand(100000000000, 999999999999);
         str_pad($newActNum,12,"0",STR_PAD_LEFT);
         $stmt = $db->prepare("SELECT account_number from TPAccounts WHERE account_number = :num");
@@ -79,16 +90,6 @@ if(isset($_POST["submit"])){
         $e = $stmt->errorInfo();
         $isValid = false;
         flash("There was an error creating unique account number. Please try again." . var_export($e, true));
-    }
-
-    $accountType = $_POST["accountType"];
-    $initBalance = $_POST["initBalance"];
-    $user = get_user_id();
-
-    if((float)$initBalance >= 5.0){ //Checks to make sure that the initial balance variable can be stripped to float and is greater than or equal to 5.0
-        $isValid = true;
-    }else{
-        flash("You did not enter a valid initial deposit. Please Try again.");
     }
 
     if($isValid) {  //Creates the account

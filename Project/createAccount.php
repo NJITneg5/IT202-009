@@ -58,6 +58,8 @@ if (!is_logged_in()) {
 <?php
 if(isset($_POST["submit"])){
     $db = getDB();
+    $worldID = getWorldID();
+
     $isValid = false;       //Check for inserts
     $uniqueNum = false;     //Check to make sure account number is available
     $uniqueCount = 0;       //Makes sure that the unique account check only runs a certain amount of times
@@ -109,7 +111,6 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-
         //Get id of new Account
         $stmt = $db->prepare("SELECT id FROM TPAccounts WHERE account_number = :newActNum");
         $r = $stmt->execute([":newActNum" => $newActNum]);
@@ -118,7 +119,7 @@ if(isset($_POST["submit"])){
 
         if (!$r) {
             $e = $stmt->errorInfo();
-            flash("Getting id for new account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            flash("Error getting id for new account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
     }
@@ -126,13 +127,13 @@ if(isset($_POST["submit"])){
     if($isValid){
         //Get expected total for world account
         $stmt = $db->prepare("SELECT balance FROM TPAccounts WHERE id = :id");
-        $r = $stmt->execute([":id" => 3]);
+        $r = $stmt->execute([":id" => $worldID]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $worldTotal = $result["balance"];
 
         if (!$r) {
             $e = $stmt->errorInfo();
-            flash("Getting balance for world account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            flash("Error getting balance for world account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
     }
@@ -141,7 +142,7 @@ if(isset($_POST["submit"])){
         //Create Transaction, to pull from world account
         $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:world, :newAct, :amount, :action, :memo, :total)");
         $r = $stmt->execute([
-            ":world" => 3,
+            ":world" => $worldID,
             ":newAct" => $actID,
             ":amount" => (float)$initBalance * -1,
             ":action" => "deposit",
@@ -161,7 +162,7 @@ if(isset($_POST["submit"])){
         $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:newAct, :world, :amount, :action, :memo, :total)");
         $r = $stmt->execute([
             ":newAct" => $actID,
-            ":world" => 3,
+            ":world" => $worldID,
             ":amount" => (float)$initBalance,
             ":action" => "deposit",
             ":memo" => "Initial Deposit",
@@ -196,6 +197,7 @@ if(isset($_POST["submit"])){
             ":balance" => $balance,
             ":id" => $actID
         ]);
+
         if (!$r) {
             $e = $stmt->errorInfo();
             flash("Error updating balance. Please contact your bank representative and relay the following error code. " . var_export($e, true));
@@ -206,7 +208,7 @@ if(isset($_POST["submit"])){
     if($isValid){
         //Sums the world account's expected balance
         $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :world");
-        $r = $stmt->execute([":world" => 3]);
+        $r = $stmt->execute([":world" => $worldID]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $balance = $result["total"];
 
@@ -222,8 +224,9 @@ if(isset($_POST["submit"])){
         $stmt = $db->prepare("UPDATE TPAccounts SET balance = :balance WHERE id = :id");
         $r = $stmt->execute([
             ":balance" => $balance,
-            ":id" => 3
+            ":id" => $worldID
         ]);
+
         if (!$r) {
             $e = $stmt->errorInfo();
             flash("Error updating world balance. Please contact your bank representative and relay the following error code. " . var_export($e, true));
@@ -238,7 +241,7 @@ if(isset($_POST["submit"])){
     }
 
 }
+require(__DIR__ . "/partials/flash.php");
 ?>
-<?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

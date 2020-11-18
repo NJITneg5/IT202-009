@@ -11,8 +11,11 @@ require_once(__DIR__ . "/../lib/helpers.php");
             <li style = "padding-left: 10%"><a href="<?php echo getURL("login.php"); ?>">Login</a></li>
             <li style = "padding: 0"><a href="<?php echo getURL("registration.php");?>">Register</a></li>
             <?php endif; ?>
+            <?php if (is_logged_in()): ?>
+                <li style = "padding-left: 10%"><a href="<?php echo getURL("testFiles/testCreateAccounts.php");?>">Create Accounts</a></li>
+            <?php endif; ?>
             <?php if (has_role("Admin")): ?>
-            <li style = "padding-left: 10%"><a href="<?php echo getURL("testFiles/testCreateAccounts.php");?>">Create Accounts</a></li>
+            <!--<li style = "padding-left: 10%"><a href="<?php //echo getURL("testFiles/testCreateAccounts.php");?>">Create Accounts</a></li>-->
             <li ><a href="<?php echo getURL("testFiles/testListAccounts.php");?>">Query Accounts</a></li>
             <li ><a href="<?php echo getURL("testFiles/testCreateTransactions.php");?>">Create Transactions</a></li>
             <li style = "padding: 0"><a href="<?php echo getURL("testFiles/testListTransactions.php");?>">Query Transactions</a></li>

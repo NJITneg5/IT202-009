@@ -60,17 +60,25 @@ if(isset($_POST["submit"])){
     $db = getDB();
     $isValid = false;       //Check for inserts
     $uniqueNum = false;     //Check to make sure account number is available
-
-    while(!$uniqueNum) {    //Loop to generate a unique account number
+    $uniqueCount = 0;       //Makes sure that the unique account check only runs a certain amount of times
+    while(!$uniqueNum && $uniqueCount < 10) {    //Loop to generate a unique account number
         $newActNum = rand(100000000000, 999999999999);
         str_pad($newActNum,12,"0",STR_PAD_LEFT);
         $stmt = $db->prepare("SELECT account_number from TPAccounts WHERE account_number = :num");
         $r = $stmt->execute([
             ":num"=>$newActNum
         ]);
-        if(empty($r)){
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if(empty($result)){
             $uniqueNum = true;
+            break;
         }
+        $uniqueCount++;
+    }
+    if($uniqueCount == 10 || !$uniqueNum){
+        $e = $stmt->errorInfo();
+        $isValid = false;
+        flash("There was an error creating unique account number. Please try again." . var_export($e, true));
     }
 
     $accountType = $_POST["accountType"];
@@ -169,7 +177,7 @@ if(isset($_POST["submit"])){
 
     if($isValid){
         //Sums the account's expected balance
-        $stmt = $db->prepare("SELECT SUM(amount) FROM TPTransactions WHERE act_src_id = :actID");
+        $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :actID");
         $r = $stmt->execute([":actID" => $actID]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $balance = $result["amount"];

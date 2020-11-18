@@ -86,7 +86,7 @@ if(isset($_POST["submit"])){
         }
         $uniqueCount++;
     }
-    if($uniqueCount == 10 || !$uniqueNum){
+    if($uniqueCount == 10 && !$uniqueNum){
         $isValid = false;
         flash("There was an error creating unique account number. Please try again.");
     }

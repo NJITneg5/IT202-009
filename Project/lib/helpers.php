@@ -76,3 +76,18 @@ function getURL($path){
     }
     return $_SERVER["CONTEXT_PREFIX"] . "/IT202repo/testBranch/Project/$path";
 }
+
+//Function to get World Account ID
+function getWorldID(){
+    global $worldID;
+    if(!isset($worldID) || empty($worldID)){
+        $db = getDB();
+        $stmt = $db->prepare("SELECT id FROM TPAccounts WHERE account_number = '000000000000'");
+        $stmt->execute();
+        $r = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($r){
+            $worldID = (int)$r["id"];
+        }
+    }
+    return $worldID;
+}

@@ -25,7 +25,7 @@
         <h4>Welcome, <?php echo get_email(); ?></h4>
         <p>How would you like to conduct business with us today:</p>
         <ul class="dashLinks">
-            <li><a href="#">Create Account</a></li>
+            <li><a href="<?php echo getURL("createAccount.php")?>">Create Account</a></li>
             <li><a href="#">My Accounts</a></li>
             <li><a href="#">Deposit</a></li>
             <li><a href="#">Withdrawal</a></li>

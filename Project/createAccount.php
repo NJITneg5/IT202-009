@@ -176,11 +176,11 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Sums the account's expected balance
+        //Sums the new account's expected balance
         $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :actID");
         $r = $stmt->execute([":actID" => $actID]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $balance = $result["amount"];
+        $balance = $result["total"];
 
         if (!$r) {
             $e = $stmt->errorInfo();
@@ -199,6 +199,34 @@ if(isset($_POST["submit"])){
         if (!$r) {
             $e = $stmt->errorInfo();
             flash("Error updating balance. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            $isValid = false;
+        }
+    }
+
+    if($isValid){
+        //Sums the world account's expected balance
+        $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :world");
+        $r = $stmt->execute([":world" => 3]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $balance = $result["total"];
+
+        if (!$r) {
+            $e = $stmt->errorInfo();
+            flash("Error SUMming total for world account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            $isValid = false;
+        }
+    }
+
+    if($isValid){
+        //Takes SUMmed balance and updates the account's actual balance
+        $stmt = $db->prepare("UPDATE TPAccounts SET balance = :balance WHERE id = :id");
+        $r = $stmt->execute([
+            ":balance" => $balance,
+            ":id" => 3
+        ]);
+        if (!$r) {
+            $e = $stmt->errorInfo();
+            flash("Error updating world balance. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
     }

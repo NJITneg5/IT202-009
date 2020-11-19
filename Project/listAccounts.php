@@ -1,4 +1,26 @@
-<!DOCTYPE HTML>
+<?php
+
+require_once(__DIR__ . "/partials/nav.php");
+
+if (!is_logged_in()) {
+        flash("You must be logged in to access this page");
+        die(header("Location: login.php"));
+}
+
+$userID = get_user_id();
+$db = getDB();
+$results = 0;
+
+$stmt = $db->prepare("SELECT id, account_number, account_type, balance FROM TPAccounts WHERE user_id = :id LIMIT 5");
+$r = $stmt->execute([":id" => $userID]);
+if ($r) {
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $e = $stmt->errorInfo();
+    flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+}
+?>
+    <!DOCTYPE HTML>
 
 <html lang="en">
 
@@ -20,24 +42,7 @@
 </head>
 <body>
 <div class="bodyMain">
-    <?php
-    if (!is_logged_in()) {
-        flash("You must be logged in to access this page");
-        die(header("Location: login.php"));
-    }
-    $userID = get_user_id();
-    $db = getDB();
-    $results = 0;
 
-    $stmt = $db->prepare("SELECT id, account_number, account_type, balance FROM TPAccounts WHERE user_id = :id LIMIT 5");
-    $r = $stmt->execute([":id" => $userID]);
-    if($r){
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }else{
-        $e = $stmt->errorInfo();
-        flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
-    }
-    ?>
     <h1>List of Your Accounts</h1>
     <?php if(count($results) > 0): ?>
         <table>

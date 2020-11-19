@@ -11,7 +11,7 @@ $userID = get_user_id();
 $db = getDB();
 $results = 0;
 
-$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') FROM TPAccounts WHERE user_id = :id LIMIT 5");
+$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance FROM TPAccounts WHERE user_id = :id LIMIT 5");
 $r = $stmt->execute([":id" => $userID]);
 if ($r) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

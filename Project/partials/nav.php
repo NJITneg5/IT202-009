@@ -13,7 +13,7 @@ require_once(__DIR__ . "/../lib/helpers.php");
             <?php endif; ?>
             <?php if (is_logged_in()): ?>
                 <li style = "padding-left: 10%"><a href="<?php echo getURL("createAccount.php");?>">Create Accounts</a></li>
-                <li ><a href="<?php echo getURL("listAccounts.php");?>">Query Accounts</a></li>
+                <li ><a href="<?php echo getURL("listAccounts.php");?>">My Accounts</a></li>
             <?php endif; ?>
             <?php if (has_role("Admin")): ?>
             <!--<li style = "padding-left: 10%"><a href="<?php //echo getURL("testFiles/testCreateAccounts.php");?>">Create Accounts</a></li>-->

@@ -94,3 +94,28 @@ address{
 .dashLinks a{
 
 }
+
+.listAccountsTable, .listAccountsHead, .listAccountsRow{
+    border-collapse: collapse;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    border: 2px solid black;
+}
+
+.listAccountsHead{
+    background-color: #33bb33;
+}
+
+.listAccountsTable td, .listAccountsTable th{
+    border: 2px solid black
+}
+
+.listAccountsRow:nth-child(even){
+    background-color: #ccc;
+}
+
+.listAccountsRow:hover{
+    background-color: gold;
+}
+

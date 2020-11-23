@@ -36,9 +36,8 @@ require_once(__DIR__ . "/../lib/helpers.php");
                 <li style = "padding-left: 10%"><a href="<?php echo getURL("createAccount.php");?>">Create Accounts</a></li>
                 <li ><a href="<?php echo getURL("listAccounts.php");?>">My Accounts</a></li>
             <?php endif; ?>
-            <?php if (has_role("Admin")): ?>
-            <li ><a href="<?php echo getURL("testFiles/testCreateTransactions.php");?>">Create Transactions</a></li>
-            <li style = "padding: 0"><a href="<?php echo getURL("testFiles/testListTransactions.php");?>">Query Transactions</a></li>
+            <?php if (has_role("Admin")): //This is for later later test pages that I may need. ?>
+
             <?php endif; ?>
         </ul>
 

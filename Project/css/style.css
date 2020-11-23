@@ -95,7 +95,7 @@ address{
 
 }
 
-.listAccountsTable, .listAccountsHead, .listAccountsRow{
+.listTable, .listHead, .listRow{
     border-collapse: collapse;
     text-align: center;
     margin: auto;
@@ -103,19 +103,19 @@ address{
     border: 2px solid black;
 }
 
-.listAccountsHead{
+.listHead{
     background-color: #33bb33;
 }
 
-.listAccountsTable td, .listAccountsTable th{
+.listTable td, .listAccountsTable th{
     border: 2px solid black
 }
 
-.listAccountsRow:nth-child(even){
+.listRow:nth-child(even){
     background-color: #ccc;
 }
 
-.listAccountsRow:hover{
+.listRow:hover{
     background-color: gold;
 }
 

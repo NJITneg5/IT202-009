@@ -40,7 +40,7 @@ if ($r) {
                         <td><?php safer_echo($r["account_number"]);?></td>
                         <td><?php safer_echo($r["account_type"]);?></td>
                         <td>$<?php safer_echo($r["balance"]);?></td>
-                        <td><a href="<?php echo getURL("listTransactions.php") . "?id=" . safer_echo($r["id"]) . "&actNum=" . safer_echo($r["account_number"]) . "&balance=" . safer_echo($r["balance"]);?>">View Transactions</a></td>
+                        <td><a href="<?php echo getURL("listTransactions.php?id=" . $r["id"] . "&actNum=" . $r["account_number"] . "&balance=" . $r["balance"]);?>">View Transactions</a></td>
                     </tr>
                 <?php endforeach;?>
             </tbody>

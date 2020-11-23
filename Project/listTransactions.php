@@ -10,17 +10,23 @@ if (!is_logged_in()) {
 if(isset($_GET["id"])){
     $acctId = $_GET["id"];
 }
-if(isset($_GET["actNum"])){
-    $acctNum = $_GET["actNum"];
-}
-if(isset($_GET["balance"])){
-    $balance = $_GET["balance"];
-}
-
 $db = getDB();
 
+if(isset($acctId)) {
+    $stmt = $db->prepare("SELECT account_number, balance FROM TPAccounts WHERE id = :id");
+    $r = $stmt->execute([":id" => $acctId]);
+    if($r){
+        $acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $acctNum = $acctResults["account_number"];
+        $balance = $acctResults["balance"];
+    }else {
+        $e = $stmt->errorInfo();
+        flash("There was an error fetching your account information. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+    }
+}
+
 if(isset($acctId) && isset($acctNum) && isset($balance)) {
-    $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_dest_id = :acctID ORDER BY created LIMIT 10");
+    $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT 10");
     $r = $stmt->execute(["acctID" => $acctId]);
     if ($r) {
         $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -111,18 +111,22 @@ if (isset($_POST["saved"])) {
 
     <p>Change your info?</p>
     <form method="POST" id = "profileForm">
-        <label for="email">Email:</label><br>
+        <label for="email">Email:<br>
         <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/><br><br>
+        </label>
 
-        <label for="username">Username:</label><br>
+        <label for="username">Username:<br>
         <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/><br><br>
+        </label>
 
         <!-- DO NOT PRELOAD PASSWORD-->
-        <label for="pw">Password:</label><br>
+        <label for="pw">Password:<br>
         <input type="password" name="password"/><br><br>
+        </label>
 
-        <label for="cpw">Confirm Password:</label><br>
+        <label for="cpw">Confirm Password:<br>
         <input type="password" name="confirm"/><br><br>
+        </label>
 
         <input type="submit" name="saved" value="Save Profile"/>
     </form>

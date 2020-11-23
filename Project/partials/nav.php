@@ -2,6 +2,27 @@
 //we'll be including this on most/all pages so it's a good place to include anything else we want on those pages
 require_once(__DIR__ . "/../lib/helpers.php");
 ?>
+<!DOCTYPE HTML>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="Author" content="Nate Gile">
+    <meta name="date" content="9/24/2020">
+    <meta name="keywords" content="">
+    <title>Gile Family Bank</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
+    <link rel="icon" href="../bankIcon.jpg" type="image/gif" sizes="16x16">
+
+    <style>
+        body {
+            font-family: 'Average', serif;
+        }
+    </style>
+</head>
+<body>
 <div class = "navMain">
     <h1 id="title">A Simple Man's Bank</h1>
     <nav>
@@ -16,8 +37,6 @@ require_once(__DIR__ . "/../lib/helpers.php");
                 <li ><a href="<?php echo getURL("listAccounts.php");?>">My Accounts</a></li>
             <?php endif; ?>
             <?php if (has_role("Admin")): ?>
-            <!--<li style = "padding-left: 10%"><a href="<?php //echo getURL("testFiles/testCreateAccounts.php");?>">Create Accounts</a></li>-->
-            <!--<li ><a href="<?php //echo getURL("testFiles/testListAccounts.php");?>">Query Accounts</a></li>-->
             <li ><a href="<?php echo getURL("testFiles/testCreateTransactions.php");?>">Create Transactions</a></li>
             <li style = "padding: 0"><a href="<?php echo getURL("testFiles/testListTransactions.php");?>">Query Transactions</a></li>
             <?php endif; ?>

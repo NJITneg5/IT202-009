@@ -20,27 +20,7 @@ if ($r) {
     flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
 }
 ?>
-    <!DOCTYPE HTML>
 
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="Author" content="Nate Gile">
-    <meta name="date" content="9/24/2020">
-    <meta name="keywords" content="">
-    <title>Gile Family Bank</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
-    <link rel="icon" href="bankIcon.jpg" type="image/gif" sizes="16x16">
-
-    <style>
-        body {
-            font-family: 'Average', serif;
-        }
-    </style>
-</head>
-<body>
 <div class="bodyMain">
 
     <h1>List of Your Accounts</h1>

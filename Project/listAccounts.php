@@ -25,9 +25,9 @@ if ($r) {
 
     <h1>List of Your Accounts</h1>
     <?php if(count($results) > 0): ?>
-        <table class="listAccountsTable">
+        <table class="listTable">
             <thead>
-                <tr class="listAccountsHead">
+                <tr class="listHead">
                     <th>Account Number</th>
                     <th>Account Type</th>
                     <th>Account Balance</th>
@@ -36,11 +36,11 @@ if ($r) {
             </thead>
             <tbody>
                 <?php foreach ($results as $r):?>
-                    <tr class="listAccountsRow">
+                    <tr class="listRow">
                         <td><?php safer_echo($r["account_number"]);?></td>
                         <td><?php safer_echo($r["account_type"]);?></td>
                         <td>$<?php safer_echo($r["balance"]);?></td>
-                        <td><a href="#">View Transactions (Not Implemented yet)</a></td>
+                        <td><a href="<?php echo getURL("listTransactions.php?id=") . safer_echo($r["id"]) . "&actNum=" . safer_echo($r["account_number"]) . "&balance=" . safer_echo($r["balance"]);?>">View Transactions</a></td>
                     </tr>
                 <?php endforeach;?>
             </tbody>

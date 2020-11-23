@@ -47,7 +47,7 @@ if ($r) {
         </table>
     <?php else: ?>
         <p>You do not have any accounts with our bank. Click here to create one: </p>
-        <a href="<?php getURL("createAccount.php")?>">Create Account</a>
+        <a href="<?php echo getURL("createAccount.php")?>">Create Account</a>
     <?php endif; ?>
     <hr>
 

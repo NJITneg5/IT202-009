@@ -4,24 +4,52 @@ if (!is_logged_in()) {
     flash("You must be logged in to access this page");
     die(header("Location: login.php"));
 }
+
+$initAction = 0;
+
+if(isset($_GET["action"])){
+    $initAction = $_GET["action"];
+}
+
+$userID = get_user_id();
+$db=getDB();
+
+$stmt = $db->prepare("SELECT id, account_number FROM TPAccounts WHERE user_id = :userID");
+$r = $stmt->execute([":userID" => $userID]);
+$acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 
 <div class="bodyMain">
-    <h1>Please Create An Account With Our Bank</h1>
+    <h1>Transaction Creation</h1>
 
     <form method="POST">
-        <label>Account Type:<br>
-            <!--TODO Add other account types such as savings when time comes-->
-            <select name="accountType">
-                <option value="checking">Checking</option>
-            </select> <br><br>
-        </label>
-        <label>Initial Deposit: (Minimum of $5.00 is needed.)<br>
-            <input name="initBalance" type="text" placeholder="00.00"><br><br>
-        </label>
-        <input type="submit" name="submit" value="Create">
-        <input type="reset" value="Reset">
+        <label>Account Selection:<br>
+            <select name="acctSelect">
+                <?php foreach($acctResults as $r ): ?>
+                    <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
+                <?php endforeach;?>
+            </select>
+        </label> <br><br>
 
+        <label>Action:<br>
+            <select name="actionType">
+                <option value="deposit" <?php echo ($initAction == "0"?'selected="selected"':'');?>>Deposit</option>
+                <option value="withdraw" <?php echo ($initAction == "1"?'selected="selected"':'');?>>Withdraw</option>
+            </select>
+        </label> <br><br>
+
+        <label>Amount:<br>
+            <input type="text" name="amount" placeholder="00.00">
+        </label> <br><br>
+
+        <label>Memo:<br>
+            <input type="text" name="memo" placeholder="e.g Paycheck or Car Payment">
+        </label> <br><br>
+
+        <input type="submit" value="Submit" name="submit">
+        <input type="reset" value="Reset">
     </form>
 
     <hr>
@@ -34,73 +62,46 @@ if (!is_logged_in()) {
 </div>
 
 <!--PHP Shenanigans -->
-
 <?php
 if(isset($_POST["submit"])){
-    $db = getDB();
+    $db= getDB();
     $worldID = getWorldID();
 
-    $isValid = false;       //Check for inserts
-    $uniqueNum = false;     //Check to make sure account number is available
-    $uniqueCount = 0;       //Makes sure that the unique account check only runs a certain amount of times
+    $isValid = false;
 
-    $accountType = $_POST["accountType"];
-    $initBalance = $_POST["initBalance"];
-    $user = get_user_id();
+    $actID = $_POST["acctSelect"];
+    $actionType = $_POST["actionType"];
+    $amount = (float)$_POST["amount"];
+    $memo = $_POST["memo"];
+    $balance = 0.0;
 
-    if((float)$initBalance >= 5.0){ //Checks to make sure that the initial balance variable can be stripped to float and is greater than or equal to 5.0
+    if($amount >= 0.0){ //Checks if amount is valid
         $isValid = true;
     }else{
-        flash("You did not enter a valid initial deposit. Please Try again.");
+        flash("You did not enter a valid amount. Please try again.");
     }
 
-    while(!$uniqueNum && $uniqueCount < 10 && $isValid) {    //Loop to generate a unique account number
-        $newActNum = rand(100000000000, 999999999999);
-        str_pad($newActNum,12,"0",STR_PAD_LEFT);
-        $stmt = $db->prepare("SELECT account_number from TPAccounts WHERE account_number = :num");
-        $r = $stmt->execute([
-            ":num"=>$newActNum
-        ]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if(empty($result)){
-            $uniqueNum = true;
-            break;
-        }
-        $uniqueCount++;
+    if($isValid){   //Gets the user's selected account balance
+        $stmt = $db->prepare("SELECT balance FROM TPAccounts WHERE id = :id");
+        $r = $stmt->execute([":id" => $actID]);
+        $results = $stmt->fetch(PDO::FETCH_ASSOC);
+        $balance = (float)$results["balance"];
     }
-    if($uniqueCount == 10 && !$uniqueNum){
+
+    if($isValid && $actionType == "withdraw" && $amount > $balance){    //Checks if the account has enough to withdraw the asked amount
+        flash("You do not have enough money in your account to complete this action. You have $" . $balance . ". Please try again.");
         $isValid = false;
-        flash("There was an error creating unique account number. Please try again.");
     }
 
-    if($isValid) {  //Creates the account
-        $stmt = $db->prepare("INSERT INTO TPAccounts (account_number, account_type, balance, user_id) VALUES(:accountNum, :accountType, :initBalance, :userID)");
-        $r = $stmt->execute([
-            ":accountNum" => $newActNum,
-            ":accountType" => $accountType,
-            ":initBalance" => 0,
-            ":userID" => $user
-        ]);
-        if ($r) {
-            flash("Account created successfully with Account Number: " . $newActNum);
-        } else {
-            $e = $stmt->errorInfo();
-            $isValid = false;
-            flash("There was an error creating the account. Please try again." . var_export($e, true));
-        }
-    }
-
-    if($isValid){
-        //Get id of new Account
-        $stmt = $db->prepare("SELECT id FROM TPAccounts WHERE account_number = :newActNum");
-        $r = $stmt->execute([":newActNum" => $newActNum]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $actID = $result["id"];
-
-        if (!$r) {
-            $e = $stmt->errorInfo();
-            flash("Error getting id for new account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
-            $isValid = false;
+    if($isValid) {  //Sets the world amount and amount to correct values for insertion into Transaction table
+        switch ($actionType) {
+            case "deposit":
+                $worldAmount = $amount * -1;
+                break;
+            case "withdraw":
+                $worldAmount = $amount;
+                $amount *= -1;
+                break;
         }
     }
 
@@ -119,34 +120,34 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Create Transaction, to pull from world account
+        //Create Transaction, for world account
         $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:world, :newAct, :amount, :action, :memo, :total)");
         $r = $stmt->execute([
             ":world" => $worldID,
             ":newAct" => $actID,
-            ":amount" => (float)$initBalance * -1,
-            ":action" => "deposit",
-            ":memo" => "Initial Deposit",
-            ":total" => ($worldTotal - $initBalance)
+            ":amount" => $worldAmount,
+            ":action" => $actionType,
+            ":memo" => $memo,
+            ":total" => ($worldTotal + $worldAmount)
         ]);
 
         if (!$r) {
             $e = $stmt->errorInfo();
-            flash("Error writing transaction from World account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            flash("Error writing transaction for World account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
     }
 
     if($isValid){
-        //Create Transaction, to put into new account
+        //Create Transaction, for user account
         $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:newAct, :world, :amount, :action, :memo, :total)");
         $r = $stmt->execute([
             ":newAct" => $actID,
             ":world" => $worldID,
-            ":amount" => (float)$initBalance,
-            ":action" => "deposit",
-            ":memo" => "Initial Deposit",
-            ":total" => (float)$initBalance
+            ":amount" => $amount,
+            ":action" => $actionType,
+            ":memo" => $memo,
+            ":total" => ($balance + $amount)
         ]);
 
         if (!$r) {
@@ -157,11 +158,11 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Sums the new account's expected balance
+        //Sums the user's account expected balance
         $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :actID");
         $r = $stmt->execute([":actID" => $actID]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $balance = $result["total"];
+        $newBalance = $result["total"];
 
         if (!$r) {
             $e = $stmt->errorInfo();
@@ -174,7 +175,7 @@ if(isset($_POST["submit"])){
         //Takes SUMmed balance and updates the account's actual balance
         $stmt = $db->prepare("UPDATE TPAccounts SET balance = :balance WHERE id = :id");
         $r = $stmt->execute([
-            ":balance" => $balance,
+            ":balance" => $newBalance,
             ":id" => $actID
         ]);
 
@@ -215,12 +216,12 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Final Success Message that redirects user to the new account's page.
-        flash("Initial Deposit has been successfully processed.");
-        header("Location: listAccounts.php");
+        //Final Success Message that redirects user to the user's account page.
+        flash("Transaction has been successfully processed.");
+        die(header("Location: listAccounts.php"));
     }
-
 }
+
 require(__DIR__ . "/partials/flash.php");
 ?>
 </body>

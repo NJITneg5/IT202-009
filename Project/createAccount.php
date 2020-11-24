@@ -217,7 +217,7 @@ if(isset($_POST["submit"])){
     if($isValid){
         //Final Success Message that redirects user to the new account's page.
         flash("Initial Deposit has been successfully processed.");
-        //header("Location: ViewAccount.php?id=" . $actID); TODO Implement View Account Page
+        header("Location: listAccounts.php");
     }
 
 }

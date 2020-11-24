@@ -218,7 +218,7 @@ if(isset($_POST["submit"])){
     if($isValid){
         //Final Success Message that redirects user to the user's account page.
         flash("Transaction has been successfully processed.");
-        header("Location: listAccounts.php");
+        die(header("Location: listAccounts.php"));
     }
 }
 

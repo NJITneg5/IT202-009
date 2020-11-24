@@ -1,25 +1,4 @@
-<!DOCTYPE HTML>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-	<meta name="Author" content="Nate Gile">
-	<meta name="date" content="9/24/2020">
-	<meta name="keywords" content="">
-    <title>Gile Family Bank</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-	<link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
-	<link rel="icon" href="bankIcon.jpg" type="image/gif" sizes="16x16">
-
-<style>
-body {
-    font-family: 'Average';
-}
-</style>
-</head>
-<body>
-    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
+<?php require_once(__DIR__ . "/partials/nav.php"); ?>
     <div class="bodyMain">
 	<h1>Please Log in with your Email or Username and password.</h1>
 	<form method = "POST" id ="loginForm">
@@ -112,8 +91,7 @@ body {
                 if ($result && isset($result["password"])) {
                     $password_hash_from_db = $result["password"];
                     if (password_verify($password, $password_hash_from_db)) {
-                        $stmt = $db->prepare("
-SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.role_id where TPUserRoles.user_id = :user_id and TPRoles.is_active = 1 and TPUserRoles.is_active = 1");
+                        $stmt = $db->prepare("SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.role_id where TPUserRoles.user_id = :user_id and TPRoles.is_active = 1 and TPUserRoles.is_active = 1");
                         $stmt->execute([":user_id" => $result["id"]]);
                         $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -143,7 +121,8 @@ SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.ro
             flash("There was a validation issue");
         }
     }
+
+    require(__DIR__ . "/partials/flash.php");
     ?>
-    <?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

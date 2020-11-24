@@ -20,34 +20,14 @@ if ($r) {
     flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
 }
 ?>
-    <!DOCTYPE HTML>
 
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="Author" content="Nate Gile">
-    <meta name="date" content="9/24/2020">
-    <meta name="keywords" content="">
-    <title>Gile Family Bank</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
-    <link rel="icon" href="bankIcon.jpg" type="image/gif" sizes="16x16">
-
-    <style>
-        body {
-            font-family: 'Average', serif;
-        }
-    </style>
-</head>
-<body>
 <div class="bodyMain">
 
     <h1>List of Your Accounts</h1>
     <?php if(count($results) > 0): ?>
-        <table class="listAccountsTable">
+        <table class="listTable">
             <thead>
-                <tr class="listAccountsHead">
+                <tr class="listHead">
                     <th>Account Number</th>
                     <th>Account Type</th>
                     <th>Account Balance</th>
@@ -56,18 +36,18 @@ if ($r) {
             </thead>
             <tbody>
                 <?php foreach ($results as $r):?>
-                    <tr class="listAccountsRow">
+                    <tr class="listRow">
                         <td><?php safer_echo($r["account_number"]);?></td>
                         <td><?php safer_echo($r["account_type"]);?></td>
                         <td>$<?php safer_echo($r["balance"]);?></td>
-                        <td><a href="#">View Transactions (Not Implemented yet)</a></td>
+                        <td><a href="<?php echo getURL("listTransactions.php?id=" . $r["id"]);?>">View Transactions</a></td>
                     </tr>
                 <?php endforeach;?>
             </tbody>
         </table>
     <?php else: ?>
         <p>You do not have any accounts with our bank. Click here to create one: </p>
-        <a href="<?php getURL("createAccount.php")?>">Create Account</a>
+        <a href="<?php echo getURL("createAccount.php")?>">Create Account</a>
     <?php endif; ?>
     <hr>
 

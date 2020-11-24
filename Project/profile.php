@@ -103,27 +103,7 @@ if (isset($_POST["saved"])) {
     }
 }
 ?>
-<!DOCTYPE HTML>
 
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="Author" content="Nate Gile">
-    <meta name="date" content="9/24/2020">
-    <meta name="keywords" content="">
-    <title>Gile Family Bank</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Average' rel='stylesheet'>
-    <link rel="icon" href="bankIcon.jpg" type="image/gif" sizes="16x16">
-
-    <style>
-        body {
-            font-family: 'Average', serif;
-        }
-    </style>
-</head>
-<body>
     <div class="bodyMain">
     <h1>Simple Bank Profile</h1>
 
@@ -131,18 +111,22 @@ if (isset($_POST["saved"])) {
 
     <p>Change your info?</p>
     <form method="POST" id = "profileForm">
-        <label for="email">Email:</label><br>
+        <label for="email">Email:<br>
         <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/><br><br>
+        </label>
 
-        <label for="username">Username:</label><br>
+        <label for="username">Username:<br>
         <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/><br><br>
+        </label>
 
         <!-- DO NOT PRELOAD PASSWORD-->
-        <label for="pw">Password:</label><br>
+        <label for="pw">Password:<br>
         <input type="password" name="password"/><br><br>
+        </label>
 
-        <label for="cpw">Confirm Password:</label><br>
+        <label for="cpw">Confirm Password:<br>
         <input type="password" name="confirm"/><br><br>
+        </label>
 
         <input type="submit" name="saved" value="Save Profile"/>
     </form>

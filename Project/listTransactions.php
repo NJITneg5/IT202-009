@@ -52,7 +52,7 @@ if(isset($acctId) && isset($acctNum) && isset($balance)) {
     <h1>Recent Transactions on this Account</h1>
 
     <h4>Account Number: <?php safer_echo($acctNum);?></h4>
-    <h4>Balance: <?php safer_echo($balance);?></h4>
+    <h4>Balance: $<?php safer_echo($balance);?></h4>
 
     <?php if(count($transResults) > 0): ?>
         <table class="listTable">

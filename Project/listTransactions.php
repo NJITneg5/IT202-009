@@ -10,18 +10,24 @@ if (!is_logged_in()) {
 if(isset($_GET["id"])){
     $acctId = $_GET["id"];
 }
+
 $db = getDB();
+$userID = get_user_id();
 
 if(isset($acctId)) {
-    $stmt = $db->prepare("SELECT account_number, balance FROM TPAccounts WHERE id = :id");
-    $r = $stmt->execute([":id" => $acctId]);
+    $stmt = $db->prepare("SELECT account_number, balance FROM TPAccounts WHERE id = :id AND user_id = :userID");
+    $r = $stmt->execute([
+            ":id" => $acctId,
+            ":userID" => $userID
+    ]);
+
     if($r){
-        $acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $acctResults = $stmt->fetch(PDO::FETCH_ASSOC);
         $acctNum = $acctResults["account_number"];
         $balance = $acctResults["balance"];
     }else {
         $e = $stmt->errorInfo();
-        flash("There was an error fetching your account information. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+        flash("Error fetching account information, likely from trying to access an account that is not yours. Please refrain from doing that.");
     }
 }
 

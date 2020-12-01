@@ -78,7 +78,7 @@ if(isset($_POST["submit"])){
 
     if(strcmp($srcID,$destID) != 0){
         $isValid = false;
-        flash("You have selected the same account.");
+        flash("You have selected the same account." . $srcID . " " . $destID);
     }
 
     if($isValid){   //Gets the user's selected account balance

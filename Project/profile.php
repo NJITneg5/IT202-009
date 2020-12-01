@@ -10,6 +10,13 @@ if (!is_logged_in()) {
 }
 
 $db = getDB();
+
+$stmt = $db->prepare("SELECT firstName, lastName FROM TPUsers WHERE id = :id");
+$stmt->execute([":id" => get_user_id()]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+$qFirst = $result["firstName"];
+$qLast = $result["lastName"];
+
 //save data if we submitted the form
 if (isset($_POST["saved"])) {
     $isValid = true;
@@ -102,25 +109,17 @@ if (isset($_POST["saved"])) {
         }
     }
     if($isValid){
-        $stmt = $db->prepare("SELECT firstName, lastName FROM TPUsers WHERE id = :id");
-        $stmt->execute([":id" => get_user_id()]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($result){
-            $qFirst = $result["firstName"];
-            $qLast = $result["lastName"];
+        $formFirst = $_POST["firstName"];
+        $formLast = $_POST["lastName"];
 
-            $formFirst = $_POST["firstName"];
-            $formLast = $_POST["lastName"];
+        if(strcmp($qFirst,$formFirst) != 0){
+            $stmt = $db->prepare("UPDATE TPUsers set firstName = :first WHERE id = :id");
+            $stmt->execute([":first" => $formFirst, ":id" => get_user_id()]);
+        }
 
-            if(strcmp($qFirst,$formFirst) != 0){
-                $stmt = $db->prepare("UPDATE TPUsers set firstName = :first WHERE id = :id");
-                $stmt->execute([":first" => $formFirst, ":id" => get_user_id()]);
-            }
-
-            if(strcmp($qLast,$formLast) != 0){
-                $stmt = $db->prepare("UPDATE TPUsers set lastName = :last WHERE id = :id");
-                $stmt->execute([":last" => $formLast, ":id" => get_user_id()]);
-            }
+        if(strcmp($qLast,$formLast) != 0){
+            $stmt = $db->prepare("UPDATE TPUsers set lastName = :last WHERE id = :id");
+            $stmt->execute([":last" => $formLast, ":id" => get_user_id()]);
         }
     }
 }
@@ -134,11 +133,11 @@ if (isset($_POST["saved"])) {
     <p>Change your info?</p>
     <form method="POST" id = "profileForm">
         <label>First Name: <br>
-        <input type="text" name="firstName" placeholder="John"> <br><br>
+        <input type="text" name="firstName" value="<?php echo $qFirst ?>" placeholder="John"> <br><br>
         </label>
 
         <label>Last Name: <br>
-        <input type="text" name="lastName" placeholder="Doe"> <br><br>
+        <input type="text" name="lastName" value="<?php echo $qLast ?>" placeholder="Doe"> <br><br>
         </label>
 
         <label for="email">Email:<br>

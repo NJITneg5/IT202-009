@@ -20,7 +20,7 @@ $acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <form method="POST">
         <label>From Account Selection:<br>
-            <select name="scrSelect">
+            <select name="srcSelect">
                 <?php foreach($acctResults as $r ): ?>
                     <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
                 <?php endforeach;?>

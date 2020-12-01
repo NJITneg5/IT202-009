@@ -76,9 +76,9 @@ if(isset($_POST["submit"])){
         flash("You did not enter a valid amount. Please try again.");
     }
 
-    if(strcmp($srcID,$destID) != 0){
+    if(strcmp($srcID,$destID) == 0){
         $isValid = false;
-        flash("You have selected the same account." . $srcID . " " . $destID);
+        flash("You have selected the same account.");
     }
 
     if($isValid){   //Gets the user's selected account balance

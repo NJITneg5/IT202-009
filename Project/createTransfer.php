@@ -76,6 +76,11 @@ if(isset($_POST["submit"])){
         flash("You did not enter a valid amount. Please try again.");
     }
 
+    if(strcmp($srcID,$destID) != 0){
+        $isValid = false;
+        flash("You have selected the same account.");
+    }
+
     if($isValid){   //Gets the user's selected account balance
         $stmt = $db->prepare("SELECT balance FROM TPAccounts WHERE id = :id");
         $r = $stmt->execute([":id" => $srcID]);

@@ -105,7 +105,7 @@ if(isset($acctId) && isset($acctNum) && isset($balance)) {
     <?php else: ?>
         <p>There are no transactions for this account. (Which is bad, because there should at least be a "Initial Deposit")</p>
     <?php endif; ?>
-
+    <br>
     <div class="listNav">
         <ul class="pagination justify-content-center">
             <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
@@ -116,7 +116,7 @@ if(isset($acctId) && isset($acctNum) && isset($balance)) {
                     <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a>
                 </li>
             <?php endfor; ?>
-            <li class="page-item <?php echo ($page+1) >= $totalPages?"disabled":"";?>">
+            <li class="page-item <?php echo $page >= $totalPages?"disabled":"";?>">
                 <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>">Next</a>
             </li>
         </ul>

@@ -90,10 +90,10 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        $stmt = $db->prepare("SELECT TPAccounts.id, account_number, balance FROM `TPUsers` JOIN `TPAccounts` ON TPUsers.id=TPAccounts.user_id WHERE lastName=:last AND account_number LIKE :digits LIMIT 1");
+        $stmt = $db->prepare("SELECT TPAccounts.id AS newID, account_number, balance FROM `TPUsers` JOIN `TPAccounts` ON TPUsers.id=TPAccounts.user_id WHERE lastName=:last AND account_number LIKE :digits LIMIT 1");
         $r = $stmt->execute([":last" => $lastName, ":digits" => "%$searchNum"]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $destID = $result["TPAccounts.id"];
+        $destID = $result["newID"];
         $acctNum = $result["account_number"];
         $destBalance = $result["balance"];
 

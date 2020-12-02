@@ -16,7 +16,7 @@ $acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="bodyMain">
-    <h1>Transfer Between My Accounts</h1>
+    <h1>Transfer Between Outside Accounts</h1>
 
     <form method="POST">
         <label>From Account Selection:<br>

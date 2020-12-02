@@ -10,11 +10,23 @@ if (!is_logged_in()) {
 if(isset($_GET["id"])){
     $acctId = $_GET["id"];
 }
+$page = 1;
+$perPage = 10;
+
+if(isset($_GET["page"])){
+    try{
+        $page = (int)$_GET["page"];
+    }
+    catch(Exception $e){
+
+    }
+}
+
 
 $db = getDB();
 $userID = get_user_id();
 
-if(isset($acctId)) {
+if(isset($acctId)) {    //To get info on the account
     $stmt = $db->prepare("SELECT account_number, balance FROM TPAccounts WHERE id = :id AND user_id = :userID");
     $r = $stmt->execute([
             ":id" => $acctId,
@@ -32,8 +44,23 @@ if(isset($acctId)) {
 }
 
 if(isset($acctId) && isset($acctNum) && isset($balance)) {
-    $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT 10");
-    $r = $stmt->execute(["acctID" => $acctId]);
+    $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID");
+    $stmt->execute([":acctID" => $acctId]);
+    $result =$stmt->fetch(PDO::FETCH_ASSOC);
+    $total = 0;
+    if($result){
+        $total = (int)$result["total"];
+    }
+    $totalPages = ceil($total / $perPage);
+    $offset = ($page - 1) * $perPage;
+}
+
+if(isset($acctId) && isset($acctNum) && isset($balance)) {
+    $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT :offset, :count");
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(":acctID", $acctId);
+    $r = $stmt->execute();
     if ($r) {
         $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
@@ -78,6 +105,23 @@ if(isset($acctId) && isset($acctNum) && isset($balance)) {
     <?php else: ?>
         <p>There are no transactions for this account. (Which is bad, because there should at least be a "Initial Deposit")</p>
     <?php endif; ?>
+
+    <div class="listNav">
+        <ul class="paginationList">
+            <li class="pagePrev <?php echo ($page-1) < 1?"disabled":"";?>">
+                <a class="pageLink" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+            </li>
+            <?php for($i = 0; $i < $totalPages; $i++):?>
+                <li class="pageItem <?php echo ($page-1) == $i?"active":"";?>">
+                    <a class="pageLink" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a>
+                </li>
+            <?php endfor; ?>
+            <li class="pageNext <?php echo ($page+1) >= $totalPages?"disabled":"";?>">
+                <a class="pageLink" href="?page=<?php echo $page+1;?>">Next</a>
+            </li>
+        </ul>
+    </div>
+
     <hr>
 
     <address>

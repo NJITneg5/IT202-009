@@ -107,17 +107,15 @@ if(isset($acctId) && isset($acctNum) && isset($balance)) {
     <?php endif; ?>
 
     <div class="listNav">
-        <ul class="paginationList">
-            <li class="pagePrev <?php echo ($page-1) < 1?"disabled":"";?>">
-                <a class="pageLink" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+        <ul class="pagination justify-content-center">
+            <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
+                <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
             </li>
             <?php for($i = 0; $i < $totalPages; $i++):?>
-                <li class="pageItem <?php echo ($page-1) == $i?"active":"";?>">
-                    <a class="pageLink" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a>
-                </li>
+                <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
             <?php endfor; ?>
-            <li class="pageNext <?php echo ($page+1) >= $totalPages?"disabled":"";?>">
-                <a class="pageLink" href="?page=<?php echo $page+1;?>">Next</a>
+            <li class="page-item <?php echo ($page+1) >= $totalPages?"disabled":"";?>">
+                <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
             </li>
         </ul>
     </div>

@@ -110,7 +110,7 @@ if(!$allSet) {
 
 if(isset($_POST["submit"]) || $allSet){
     if(isset($_POST["submit"])) {
-        $action = $_POST["action"];
+        $action = $_POST["actionType"];
         $startDate = $_POST["startDate"];
         $endDate = $_POST["endDate"];
     }

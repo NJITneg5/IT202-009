@@ -10,12 +10,17 @@ if (!is_logged_in()) {
 if(isset($_GET["id"])){
     $acctId = $_GET["id"];
 }
+
 $page = 1;
 $perPage = 10;
 $action = null;
+
 $startDate = null;
+$prefillStart = null;
+
 $endDate = null;
-$allSet = false;
+$prefillEnd = null;
+
 $epochDay= "1970-01-01 00:00:00";
 
 if(isset($_GET["page"])){
@@ -27,38 +32,19 @@ if(isset($_GET["page"])){
     }
 }
 
-if(isset($_GET["action"])){
-    try{
-        $action = $_GET["action"];
-    }
-    catch(Exception $e){
-
-    }
+if(isset($_SESSION["actionType"])){
+    $action = $_SESSION["actionType"];
 }
 
-if(isset($_GET["startDate"])){
-    try{
-        $startDate = $_GET["startDate"];
-
-    }
-    catch(Exception $e){
-
-    }
+if(isset($_SESSION["startDate"])){
+    $startDate = $_SESSION["startDate"];
+    $prefillStart = $_SESSION["prefillStart"];
 }
 
-if(isset($_GET["endDate"])){
-    try{
-        $endDate = $_GET["endDate"];
-    }
-    catch(Exception $e){
-
-    }
+if(isset($_SESSION["endDate"])){
+    $endDate = $_SESSION["endDate"];
+    $prefillEnd = $_SESSION["prefillEnd"];
 }
-
-if(isset($action,$startDate,$endDate)){
-    $allSet = true;
-}
-
 
 $db = getDB();
 $userID = get_user_id();
@@ -80,44 +66,17 @@ if(isset($acctId)) {    //To get info on the account
     }
 }
 
-    if (isset($acctId) && isset($acctNum) && isset($balance)) {
-        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID");
-        $stmt->execute([":acctID" => $acctId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $total = 0;
-        if ($result) {
-            $total = (int)$result["total"];
-        }
-        $totalPages = ceil($total / $perPage);
-        $offset = ($page - 1) * $perPage;
-    }
-
-    /*if (isset($acctId) && isset($acctNum) && isset($balance)) {
-        $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT :offset, :count");
-        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
-        $stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(":acctID", $acctId);
-        $r = $stmt->execute();
-        if ($r) {
-            $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $e = $stmt->errorInfo();
-            flash("There was an error fetching your transactions. Please contact a bank representative and relay the following error code. " . var_export($e, true));
-        }
-    } else {
-        flash("Account not Found Error. Please contact your bank representative.");
-        die(header("Location: listAccounts.php"));
-    }*/
-
-
     if(isset($_POST["submit"])) {
         $action = $_POST["actionType"];
+        $_SESSION["actionType"] = $action;
 
         if (isset($_POST["startDate"])) {
             $date = $_POST["startDate"];
             $date = date('Y-m-d H:i:s', strtotime($date));
             if($date > $epochDay){
                 $startDate = $date;
+                $_SESSION["startDate"] = $startDate;
+                $_SESSION["prefillStart"] = $_POST["startDate"];
             }
         }
 
@@ -126,10 +85,11 @@ if(isset($acctId)) {    //To get info on the account
             $date = date('Y-m-d H:i:s', strtotime($date));
             if($date > $epochDay){
                 $endDate = $date;
+                $_SESSION["endDate"] = $endDate;
+                $_SESSION["prefillEnd"] = $_POST["endDate"];
             }
         }
     }
-
 
     $countQuery = "SELECT COUNT(*) as total FROM TPTransactions WHERE act_src_id = :id";
     $countParams[":id"] = $acctId;
@@ -153,7 +113,7 @@ if(isset($acctId)) {    //To get info on the account
 }
     $r = $stmt->execute();
     if($r){
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
     }
     $total = 0;
     if ($result) {
@@ -223,11 +183,11 @@ if(isset($acctId)) {    //To get info on the account
         </label>
 
         <label>Start Date:
-            <input type="date" name="startDate" value="<?php echo $startDate?>">
+            <input type="date" name="startDate" value="<?php echo $prefillStart?>">
         </label>
 
         <label>End Date:
-            <input type="date" name="endDate" value="<?php echo $endDate?>">
+            <input type="date" name="endDate" value="<?php echo $prefillEnd?>">
         </label>
 
         <input type="submit" name="submit" value="Submit">
@@ -262,15 +222,15 @@ if(isset($acctId)) {    //To get info on the account
     <div class="listNav">
         <ul class="pagination justify-content-center">
             <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
-                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page-1;?>&action=<?php echo $action?>&startDate=<?php echo $startDate?>&endDate=<?php echo $endDate?>" tabindex="-1">Previous</a>
+                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
             </li>
             <?php for($i = 0; $i < $totalPages; $i++):?>
                 <li class="page-item <?php echo ($page-1) == $i?"active":"";?>">
-                    <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>&action=<?php echo $action?>&startDate=<?php echo $startDate?>&endDate=<?php echo $endDate?>"><?php echo ($i+1);?></a>
+                    <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a>
                 </li>
             <?php endfor; ?>
             <li class="page-item <?php echo $page >= $totalPages?"disabled":"";?>">
-                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>&action=<?php echo $action?>&startDate=<?php echo $startDate?>&endDate=<?php echo $endDate?>">Next</a>
+                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>">Next</a>
             </li>
         </ul>
     </div>

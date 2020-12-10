@@ -1,2 +1,2 @@
 ALTER TABLE `TPUsers`
-    ADD COLUMN visible  BOOL default '0'
+    ADD COLUMN visible  varchar(7) default 'private'

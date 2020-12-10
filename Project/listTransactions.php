@@ -219,15 +219,15 @@ if(isset($_POST["submit"]) || $allSet){
     <div class="listNav">
         <ul class="pagination justify-content-center">
             <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
-                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page-1;?>action=<?php echo $action?>startDate=<?php echo $startDate?>endDate=<?php echo $endDate?>" tabindex="-1">Previous</a>
+                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page-1;?>&action=<?php echo $action?>&startDate=<?php echo $startDate?>&endDate=<?php echo $endDate?>" tabindex="-1">Previous</a>
             </li>
             <?php for($i = 0; $i < $totalPages; $i++):?>
                 <li class="page-item <?php echo ($page-1) == $i?"active":"";?>">
-                    <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>action=<?php echo $action?>startDate=<?php echo $startDate?>endDate=<?php echo $endDate?>"><?php echo ($i+1);?></a>
+                    <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>&action=<?php echo $action?>&startDate=<?php echo $startDate?>&endDate=<?php echo $endDate?>"><?php echo ($i+1);?></a>
                 </li>
             <?php endfor; ?>
             <li class="page-item <?php echo $page >= $totalPages?"disabled":"";?>">
-                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>action=<?php echo $action?>startDate=<?php echo $startDate?>endDate=<?php echo $endDate?>">Next</a>
+                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>&action=<?php echo $action?>&startDate=<?php echo $startDate?>&endDate=<?php echo $endDate?>">Next</a>
             </li>
         </ul>
     </div>

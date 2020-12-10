@@ -112,7 +112,7 @@ if (isset($_POST["saved"])) {
     if($isValid){
         $formFirst = $_POST["firstName"];
         $formLast = $_POST["lastName"];
-        $formVisible = "";
+        $formVisible = $qVisible;
         if(isset($_POST["public"])){
             $formVisible= $_POST["public"];
         }

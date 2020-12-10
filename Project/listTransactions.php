@@ -110,59 +110,7 @@ if(!$allSet) {
     }
 }
 
-if(isset($_POST["submit"]) || $allSet){
-    if(isset($_POST["submit"])) {
-        $action = $_POST["actionType"];
 
-        $startDate = $_POST["startDate"];
-        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
-
-        $endDate = $_POST["endDate"];
-        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
-    }
-
-    if (isset($acctId) && isset($action)) {
-        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID AND action_type = :action");
-        $stmt->execute([":acctID" => $acctId,
-                        ":action" => $action]);
-
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $total = 0;
-        if ($result) {
-            $total = (int)$result["total"];
-        }
-        $totalPages = ceil($total / $perPage);
-        $offset = ($page - 1) * $perPage;
-    }
-
-    $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
-    $params[":id"] = $userID;
-
-
-    if(isset($startDate) && isset($endDate)){
-        $query .= " AND BETWEEN created :start AND :end";
-        $params[":start"] = $startDate;
-        $params[":end"] = $endDate;
-    }
-
-    if(isset($action)){
-        $query .= " AND action_type = :action";
-        $params[":action"] = $action;
-    }
-
-    $query .= " ORDER BY created LIMIT :offset, :count";
-    $params[":offset"] = $offset;
-    $params[":count"] = $perPage;
-
-    $stmt = $db->prepare($query);
-    foreach ($params as $key=>$val){
-        if($key == ":offset" || $key == ":count"){
-            $stmt->bindValue($key, $val, PDO::PARAM_INT);
-        } else {
-            $stmt->bindValue($key,$val);
-        }
-    }
-}
 ?>
 
 <div class="bodyMain">
@@ -246,6 +194,60 @@ if(isset($_POST["submit"]) || $allSet){
         Created November 2020
     </address>
 </div>
-<?php require(__DIR__ . "/partials/flash.php");?>
+<?php
+if(isset($_POST["submit"]) || $allSet){
+    if(isset($_POST["submit"])) {
+        $action = $_POST["actionType"];
+
+        $startDate = $_POST["startDate"];
+        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+
+        $endDate = $_POST["endDate"];
+        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+    }
+
+    if (isset($acctId) && isset($action)) {
+        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID AND action_type = :action");
+        $stmt->execute([":acctID" => $acctId,
+            ":action" => $action]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total = 0;
+        if ($result) {
+            $total = (int)$result["total"];
+        }
+        $totalPages = ceil($total / $perPage);
+        $offset = ($page - 1) * $perPage;
+    }
+
+    $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
+    $params[":id"] = $userID;
+
+
+    if(isset($startDate) && isset($endDate)){
+        $query .= " AND BETWEEN created :start AND :end";
+        $params[":start"] = $startDate;
+        $params[":end"] = $endDate;
+    }
+
+    if(isset($action)){
+        $query .= " AND action_type = :action";
+        $params[":action"] = $action;
+    }
+
+    $query .= " ORDER BY created LIMIT :offset, :count";
+    $params[":offset"] = $offset;
+    $params[":count"] = $perPage;
+
+    $stmt = $db->prepare($query);
+    foreach ($params as $key=>$val){
+        if($key == ":offset" || $key == ":count"){
+            $stmt->bindValue($key, $val, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue($key,$val);
+        }
+    }
+}
+require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

@@ -112,7 +112,10 @@ if (isset($_POST["saved"])) {
     if($isValid){
         $formFirst = $_POST["firstName"];
         $formLast = $_POST["lastName"];
-        $formVisible = $_POST["public"];
+        $formVisible = "";
+        if(isset($_POST["public"])){
+            $formVisible= $_POST["public"];
+        }
 
         if(strcmp($qFirst,$formFirst) != 0){
             $stmt = $db->prepare("UPDATE TPUsers set firstName = :first WHERE id = :id");

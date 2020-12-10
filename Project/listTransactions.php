@@ -115,16 +115,22 @@ if(isset($acctId)) {    //To get info on the account
 
         if (isset($_POST["startDate"])) {
             $startDate = $_POST["startDate"];
+            flash($startDate);
             $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+            flash($startDate);
         } else {
             $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+            flash($startDate);
         }
 
         if (isset($_POST["endDate"])) {
             $endDate = $_POST["endDate"];
+            flash($endDate);
             $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+            flash($endDate);
         } else {
             $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+            flash($endDate);
         }
     }
 

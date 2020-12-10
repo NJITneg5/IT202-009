@@ -16,7 +16,7 @@ $stmt->execute([":id" => get_user_id()]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $qFirst = $result["firstName"];
 $qLast = $result["lastName"];
-$qVisible = (int)$result["visible"];
+$qVisible = $result["visible"];
 
 //save data if we submitted the form
 if (isset($_POST["saved"])) {
@@ -114,8 +114,11 @@ if (isset($_POST["saved"])) {
         $formLast = $_POST["lastName"];
         $formVisible = $qVisible;
         if(isset($_POST["public"])){
-            $formVisible= $_POST["public"];
+            $formVisible = $_POST["public"];
+        } else {
+            $formVisible = "private";
         }
+
 
         if(strcmp($qFirst,$formFirst) != 0){
             $stmt = $db->prepare("UPDATE TPUsers set firstName = :first WHERE id = :id");
@@ -127,15 +130,9 @@ if (isset($_POST["saved"])) {
             $stmt->execute([":last" => $formLast, ":id" => get_user_id()]);
         }
 
-        if(strcmp($formVisible, "public")){
-            $formVisible = 1;
-        } else {
-            $formVisible = 0;
-        }
-
-        if($qVisible != $formVisible){
+        if(strcmp($qVisible, $formVisible) != 0){
             $stmt = $db->prepare("UPDATE TPUsers set visible = :vis WHERE id = :id");
-            $stmt->execute([":last" => $formVisible, ":id" => get_user_id()]);
+            $stmt->execute([":vis" => $formVisible, ":id" => get_user_id()]);
         }
     }
 }

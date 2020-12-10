@@ -161,6 +161,14 @@ if(isset($acctId)) {    //To get info on the account
             $stmt->bindValue($key, $val);
         }
     }
+    $r = $stmt->execute();
+        if ($r) {
+            $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $e = $stmt->errorInfo();
+            flash("There was an error fetching your transactions. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+        }
+
 
 ?>
 

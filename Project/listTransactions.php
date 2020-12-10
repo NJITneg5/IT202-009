@@ -12,6 +12,10 @@ if(isset($_GET["id"])){
 }
 $page = 1;
 $perPage = 10;
+$action = null;
+$startDate = null;
+$endDate = null;
+$allSet = false;
 
 if(isset($_GET["page"])){
     try{
@@ -20,6 +24,37 @@ if(isset($_GET["page"])){
     catch(Exception $e){
 
     }
+}
+
+if(isset($_GET["action"])){
+    try{
+        $action = $_GET["action"];
+    }
+    catch(Exception $e){
+
+    }
+}
+
+if(isset($_GET["startDate"])){
+    try{
+        $startDate = $_GET["startDate"];
+    }
+    catch(Exception $e){
+
+    }
+}
+
+if(isset($_GET["endDate"])){
+    try{
+        $endDate = $_GET["endDate"];
+    }
+    catch(Exception $e){
+
+    }
+}
+
+if(isset($action,$startDate,$endDate)){
+    $allSet = true;
 }
 
 
@@ -42,36 +77,42 @@ if(isset($acctId)) {    //To get info on the account
         flash("Error fetching account information, likely from trying to access an account that is not yours. Please refrain from doing that.");
     }
 }
-
-if(isset($acctId) && isset($acctNum) && isset($balance)) {
-    $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID");
-    $stmt->execute([":acctID" => $acctId]);
-    $result =$stmt->fetch(PDO::FETCH_ASSOC);
-    $total = 0;
-    if($result){
-        $total = (int)$result["total"];
+if(!$allSet) {
+    if (isset($acctId) && isset($acctNum) && isset($balance)) {
+        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID");
+        $stmt->execute([":acctID" => $acctId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total = 0;
+        if ($result) {
+            $total = (int)$result["total"];
+        }
+        $totalPages = ceil($total / $perPage);
+        $offset = ($page - 1) * $perPage;
     }
-    $totalPages = ceil($total / $perPage);
-    $offset = ($page - 1) * $perPage;
-}
 
-if(isset($acctId) && isset($acctNum) && isset($balance)) {
-    $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT :offset, :count");
-    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
-    $stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
-    $stmt->bindValue(":acctID", $acctId);
-    $r = $stmt->execute();
-    if ($r) {
-        $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (isset($acctId) && isset($acctNum) && isset($balance)) {
+        $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT :offset, :count");
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(":acctID", $acctId);
+        $r = $stmt->execute();
+        if ($r) {
+            $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $e = $stmt->errorInfo();
+            flash("There was an error fetching your transactions. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+        }
     } else {
-        $e = $stmt->errorInfo();
-        flash("There was an error fetching your transactions. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+        flash("Account not Found Error. Please contact your bank representative.");
+        die(header("Location: listAccounts.php"));
     }
-} else {
-    flash("Account not Found Error. Please contact your bank representative.");
-    die(header("Location: listAccounts.php"));
 }
 
+if(isset($_POST["submit"]) || $allSet){
+    flash($_POST["actionType"]);
+    flash($_POST["startDate"]);
+    flash($_POST["endDate"]);
+}
 ?>
 
 <div class="bodyMain">
@@ -80,6 +121,31 @@ if(isset($acctId) && isset($acctNum) && isset($balance)) {
 
     <h4>Account Number: <?php safer_echo($acctNum);?></h4>
     <h4>Balance: $<?php safer_echo($balance);?></h4>
+
+    <h6>List Filters:</h6>
+    <form method="POST">
+        <label>Action Type:
+            <select name="actionType">
+                <option>Select an option</option>
+                <option value="deposit">Deposit</option>
+                <option value="withdraw">Withdraw</option>
+                <option value="transfer">Personal Transfer</option>
+                <option value="ext-transfer">Transfer</option>
+                <option value="none">No Preference</option>
+            </select>
+        </label>
+
+        <label>Start Date:
+            <input type="date" name="startDate">
+        </label>
+
+        <label>End Date:
+            <input type="date" name="endDate">
+        </label>
+
+        <input type="submit" name="submit" value="Submit">
+        <input type="reset" value="Reset">
+    </form>
 
     <?php if(count($transResults) > 0): ?>
         <table class="listTable">

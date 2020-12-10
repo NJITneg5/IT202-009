@@ -38,6 +38,7 @@ if(isset($_GET["action"])){
 if(isset($_GET["startDate"])){
     try{
         $startDate = $_GET["startDate"];
+        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
     }
     catch(Exception $e){
 
@@ -47,6 +48,7 @@ if(isset($_GET["startDate"])){
 if(isset($_GET["endDate"])){
     try{
         $endDate = $_GET["endDate"];
+        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
     }
     catch(Exception $e){
 
@@ -111,8 +113,12 @@ if(!$allSet) {
 if(isset($_POST["submit"]) || $allSet){
     if(isset($_POST["submit"])) {
         $action = $_POST["actionType"];
+
         $startDate = $_POST["startDate"];
+        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+
         $endDate = $_POST["endDate"];
+        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
     }
 
     if (isset($acctId) && isset($action)) {

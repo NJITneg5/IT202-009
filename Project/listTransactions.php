@@ -143,7 +143,7 @@ if(isset($acctId)) {    //To get info on the account
     }
 
     $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
-    $params[":id"] = $userID;
+    $params[":id"] = $acctId;
 
 
     if(isset($startDate) && isset($endDate)){
@@ -172,12 +172,12 @@ if(isset($acctId)) {    //To get info on the account
         }
     }
     $r = $stmt->execute();
-        if ($r) {
-            $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $e = $stmt->errorInfo();
-            flash("There was an error fetching your transactions. Please contact a bank representative and relay the following error code. " . var_export($e, true));
-        }
+    if ($r) {
+        $transResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $e = $stmt->errorInfo();
+        flash("There was an error fetching your transactions. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+    }
 
 
 ?>

@@ -194,20 +194,20 @@ if(isset($acctId)) {    //To get info on the account
         <label>Action Type:
             <select name="actionType">
                 <option value="">Select an option</option>
-                <option value="deposit">Deposit</option>
-                <option value="withdraw">Withdraw</option>
-                <option value="transfer">Personal Transfer</option>
-                <option value="ext-transfer">Transfer</option>
-                <option value="">No Preference</option>
+                <option value="deposit" <?php echo ($action == "deposit"?'selected="selected"':'');?>>Deposit</option>
+                <option value="withdraw" <?php echo ($action == "withdraw"?'selected="selected"':'');?>>Withdraw</option>
+                <option value="transfer" <?php echo ($action == "transfer"?'selected="selected"':'');?>>Personal Transfer</option>
+                <option value="ext-transfer" <?php echo ($action == "ext-transfer"?'selected="selected"':'');?>>Transfer</option>
+                <option value="" <?php echo ($action == ""?'selected="selected"':'');?>>No Preference</option>
             </select>
         </label>
 
         <label>Start Date:
-            <input type="date" name="startDate">
+            <input type="date" name="startDate" value="<?php echo $startDate?>">
         </label>
 
         <label>End Date:
-            <input type="date" name="endDate">
+            <input type="date" name="endDate" value="<?php echo $endDate?>">
         </label>
 
         <input type="submit" name="submit" value="Submit">

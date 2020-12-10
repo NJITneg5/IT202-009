@@ -39,7 +39,7 @@ if(isset($_GET["action"])){
 if(isset($_GET["startDate"])){
     try{
         $startDate = $_GET["startDate"];
-        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+
     }
     catch(Exception $e){
 
@@ -49,7 +49,6 @@ if(isset($_GET["startDate"])){
 if(isset($_GET["endDate"])){
     try{
         $endDate = $_GET["endDate"];
-        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
     }
     catch(Exception $e){
 
@@ -131,19 +130,37 @@ if(isset($acctId)) {    //To get info on the account
         }
     }
 
-    if (isset($acctId) && isset($action)) {
-        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID AND action_type = :action");
-        $stmt->execute([":acctID" => $acctId,
-                        ":action" => $action]);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $total = 0;
-        if ($result) {
-            $total = (int)$result["total"];
-        }
-        $totalPages = ceil($total / $perPage);
-        $offset = ($page - 1) * $perPage;
+    $countQuery = "SELECT COUNT(*) as total FROM TPTransactions WHERE act_src_id = :id";
+    $countParams[":id"] = $acctId;
+
+    if(isset($startDate) && isset($endDate)) {
+        $countQuery .= " AND created BETWEEN :start AND :end";
+        $countParams[":start"] = $startDate;
+        $countParams[":end"] = $endDate;
     }
+
+    if(isset($action)) {
+        if (strcmp($action, "") != 0) {
+            $countQuery .= " AND action_type = :action";
+            $countParams[":action"] = $action;
+        }
+    }
+
+    $stmt = $db->prepare($countQuery);
+    foreach ($countParams as $key=>$val) {
+        $stmt->bindValue($key, $val);
+}
+    $r = $stmt->execute();
+    if($r){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    $total = 0;
+    if ($result) {
+        $total = (int)$result["total"];
+    }
+    $totalPages = ceil($total / $perPage);
+    $offset = ($page - 1) * $perPage;
 
     $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
     $params[":id"] = $acctId;

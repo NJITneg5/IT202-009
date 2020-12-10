@@ -135,6 +135,7 @@ if (isset($_POST["saved"])) {
             $stmt->execute([":vis" => $formVisible, ":id" => get_user_id()]);
         }
     }
+    header("Location: profile.php");
 }
 ?>
 

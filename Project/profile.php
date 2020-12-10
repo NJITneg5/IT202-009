@@ -155,7 +155,7 @@ if (isset($_POST["saved"])) {
 
         <label>Public Account:
             <input type="checkbox" name="public" value="public">
-        </label>
+        </label><br>
 
         <label>Email:<br>
         <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/>

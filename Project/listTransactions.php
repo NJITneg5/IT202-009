@@ -109,9 +109,53 @@ if(!$allSet) {
 }
 
 if(isset($_POST["submit"]) || $allSet){
-    flash($_POST["actionType"]);
-    flash($_POST["startDate"]);
-    flash($_POST["endDate"]);
+    if(isset($_POST["submit"])) {
+        $action = $_POST["action"];
+        $startDate = $_POST["startDate"];
+        $endDate = $_POST["endDate"];
+    }
+
+    if (isset($acctId) && isset($action)) {
+        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID AND action_type = :action");
+        $stmt->execute([":acctID" => $acctId,
+                        ":action" => $action]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total = 0;
+        if ($result) {
+            $total = (int)$result["total"];
+        }
+        $totalPages = ceil($total / $perPage);
+        $offset = ($page - 1) * $perPage;
+    }
+
+    $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
+    $params[":id"] = $userID;
+
+
+    if(isset($startDate) && isset($endDate)){
+        $query .= " AND BETWEEN created :start AND :end";
+        $params[":start"] = $startDate;
+        $params[":end"] = $endDate;
+    }
+
+    if(isset($action)){
+        $query .= " AND action_type = :action";
+        $params[":action"] = $action;
+    }
+
+    $query .= " ORDER BY created LIMIT :offset, :count";
+    $params[":offset"] = $offset;
+    $params[":count"] = $perPage;
+
+    $stmt = $db->prepare($query);
+    foreach ($params as $key=>$val){
+        if($key == ":offset" || $key == ":count"){
+            $stmt->bindValue($key, $val, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue($key,$val);
+        }
+    }
 }
 ?>
 
@@ -122,16 +166,16 @@ if(isset($_POST["submit"]) || $allSet){
     <h4>Account Number: <?php safer_echo($acctNum);?></h4>
     <h4>Balance: $<?php safer_echo($balance);?></h4>
 
-    <h6>List Filters:</h6>
+    <h6><strong>List Filters:</strong></h6>
     <form method="POST">
         <label>Action Type:
             <select name="actionType">
-                <option>Select an option</option>
+                <option value="">Select an option</option>
                 <option value="deposit">Deposit</option>
                 <option value="withdraw">Withdraw</option>
                 <option value="transfer">Personal Transfer</option>
                 <option value="ext-transfer">Transfer</option>
-                <option value="none">No Preference</option>
+                <option value="">No Preference</option>
             </select>
         </label>
 
@@ -175,15 +219,15 @@ if(isset($_POST["submit"]) || $allSet){
     <div class="listNav">
         <ul class="pagination justify-content-center">
             <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
-                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page-1;?>action=<?php echo $action?>startDate=<?php echo $startDate?>endDate=<?php echo $endDate?>" tabindex="-1">Previous</a>
             </li>
             <?php for($i = 0; $i < $totalPages; $i++):?>
                 <li class="page-item <?php echo ($page-1) == $i?"active":"";?>">
-                    <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a>
+                    <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo ($i+1);?>action=<?php echo $action?>startDate=<?php echo $startDate?>endDate=<?php echo $endDate?>"><?php echo ($i+1);?></a>
                 </li>
             <?php endfor; ?>
             <li class="page-item <?php echo $page >= $totalPages?"disabled":"";?>">
-                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>">Next</a>
+                <a class="page-link" href="?id=<?php echo $acctId?>&page=<?php echo $page+1;?>action=<?php echo $action?>startDate=<?php echo $startDate?>endDate=<?php echo $endDate?>">Next</a>
             </li>
         </ul>
     </div>

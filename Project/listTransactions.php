@@ -139,7 +139,7 @@ if(isset($acctId)) {    //To get info on the account
 
 
     if(isset($startDate) && isset($endDate)){
-        $query .= " AND BETWEEN created :start AND :end";
+        $query .= " AND created BETWEEN :start AND :end";
         $params[":start"] = $startDate;
         $params[":end"] = $endDate;
     }

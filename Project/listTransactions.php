@@ -145,8 +145,10 @@ if(isset($acctId)) {    //To get info on the account
     }
 
     if(isset($action)){
-        $query .= " AND action_type = :action";
-        $params[":action"] = $action;
+        if(strcmp($action, "") !=0){
+            $query .= " AND action_type = :action";
+            $params[":action"] = $action;
+        }
     }
 
     $query .= " ORDER BY created LIMIT :offset, :count";

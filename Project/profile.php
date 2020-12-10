@@ -154,7 +154,7 @@ if (isset($_POST["saved"])) {
         </label><br><br>
 
         <label>Public Account:
-            <input type="checkbox" name="public" value="public" <?php echo ($qVisible == "public"?'selected="selected"':'');?>>
+            <input type="checkbox" name="public" value="public" <?php echo (strcmp($qVisible, "public") == 0?'selected="selected"':'');?>>
         </label><br>
 
         <label>Email:<br>

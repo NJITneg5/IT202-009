@@ -11,11 +11,12 @@ if (!is_logged_in()) {
 
 $db = getDB();
 
-$stmt = $db->prepare("SELECT firstName, lastName FROM TPUsers WHERE id = :id");
+$stmt = $db->prepare("SELECT firstName, lastName, visible FROM TPUsers WHERE id = :id");
 $stmt->execute([":id" => get_user_id()]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $qFirst = $result["firstName"];
 $qLast = $result["lastName"];
+$qVisible = (int)$result["visible"];
 
 //save data if we submitted the form
 if (isset($_POST["saved"])) {
@@ -111,6 +112,7 @@ if (isset($_POST["saved"])) {
     if($isValid){
         $formFirst = $_POST["firstName"];
         $formLast = $_POST["lastName"];
+        $formVisible = $_POST["public"];
 
         if(strcmp($qFirst,$formFirst) != 0){
             $stmt = $db->prepare("UPDATE TPUsers set firstName = :first WHERE id = :id");
@@ -120,6 +122,17 @@ if (isset($_POST["saved"])) {
         if(strcmp($qLast,$formLast) != 0){
             $stmt = $db->prepare("UPDATE TPUsers set lastName = :last WHERE id = :id");
             $stmt->execute([":last" => $formLast, ":id" => get_user_id()]);
+        }
+
+        if(strcmp($formVisible, "public")){
+            $formVisible = 1;
+        } else {
+            $formVisible = 0;
+        }
+
+        if($qVisible != $formVisible){
+            $stmt = $db->prepare("UPDATE TPUsers set visible = :vis WHERE id = :id");
+            $stmt->execute([":last" => $formVisible, ":id" => get_user_id()]);
         }
     }
 }
@@ -133,29 +146,33 @@ if (isset($_POST["saved"])) {
     <p>Change your info?</p>
     <form method="POST" id = "profileForm">
         <label>First Name: <br>
-        <input type="text" name="firstName" value="<?php echo $qFirst ?>" placeholder="John"> <br><br>
-        </label>
+        <input type="text" name="firstName" value="<?php echo $qFirst ?>" placeholder="John">
+        </label><br><br>
 
         <label>Last Name: <br>
-        <input type="text" name="lastName" value="<?php echo $qLast ?>" placeholder="Doe"> <br><br>
+        <input type="text" name="lastName" value="<?php echo $qLast ?>" placeholder="Doe">
+        </label><br><br>
+
+        <label>Public Account:
+            <input type="checkbox" name="public" value="public">
         </label>
 
-        <label for="email">Email:<br>
-        <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/><br><br>
-        </label>
+        <label>Email:<br>
+        <input type="email" name="email" value="<?php safer_echo(get_email()); ?>"/>
+        </label><br><br>
 
-        <label for="username">Username:<br>
-        <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/><br><br>
-        </label>
+        <label>Username:<br>
+        <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>"/>
+        </label><br><br>
 
         <!-- DO NOT PRELOAD PASSWORD-->
-        <label for="pw">Password:<br>
-        <input type="password" name="password"/><br><br>
-        </label>
+        <label>Password:<br>
+        <input type="password" name="password"/>
+        </label><br><br>
 
-        <label for="cpw">Confirm Password:<br>
-        <input type="password" name="confirm"/><br><br>
-        </label>
+        <label>Confirm Password:<br>
+        <input type="password" name="confirm"/>
+        </label><br><br>
 
         <input type="submit" name="saved" value="Save Profile"/>
     </form>

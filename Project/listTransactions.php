@@ -113,11 +113,19 @@ if(isset($acctId)) {    //To get info on the account
     if(isset($_POST["submit"])) {
         $action = $_POST["actionType"];
 
-        $startDate = $_POST["startDate"];
-        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+        if (isset($_POST["startDate"])) {
+            $startDate = $_POST["startDate"];
+            $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+        } else {
+            $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+        }
 
-        $endDate = $_POST["endDate"];
-        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+        if (isset($_POST["endDate"])) {
+            $endDate = $_POST["endDate"];
+            $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+        } else {
+            $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+        }
     }
 
     if (isset($acctId) && isset($action)) {
@@ -145,7 +153,7 @@ if(isset($acctId)) {    //To get info on the account
     }
 
     if(isset($action)){
-        if(strcmp($action, "") !=0){
+        if(strcmp($action, "") != 0){
             $query .= " AND action_type = :action";
             $params[":action"] = $action;
         }

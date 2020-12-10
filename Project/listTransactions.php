@@ -79,7 +79,7 @@ if(isset($acctId)) {    //To get info on the account
         flash("Error fetching account information, likely from trying to access an account that is not yours. Please refrain from doing that.");
     }
 }
-if(!$allSet) {
+
     if (isset($acctId) && isset($acctNum) && isset($balance)) {
         $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID");
         $stmt->execute([":acctID" => $acctId]);
@@ -92,7 +92,7 @@ if(!$allSet) {
         $offset = ($page - 1) * $perPage;
     }
 
-    if (isset($acctId) && isset($acctNum) && isset($balance)) {
+    /*if (isset($acctId) && isset($acctNum) && isset($balance)) {
         $stmt = $db->prepare("SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :acctID ORDER BY created LIMIT :offset, :count");
         $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
         $stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
@@ -107,9 +107,60 @@ if(!$allSet) {
     } else {
         flash("Account not Found Error. Please contact your bank representative.");
         die(header("Location: listAccounts.php"));
-    }
-}
+    }*/
 
+
+    if(isset($_POST["submit"])) {
+        $action = $_POST["actionType"];
+
+        $startDate = $_POST["startDate"];
+        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+
+        $endDate = $_POST["endDate"];
+        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+    }
+
+    if (isset($acctId) && isset($action)) {
+        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID AND action_type = :action");
+        $stmt->execute([":acctID" => $acctId,
+                        ":action" => $action]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total = 0;
+        if ($result) {
+            $total = (int)$result["total"];
+        }
+        $totalPages = ceil($total / $perPage);
+        $offset = ($page - 1) * $perPage;
+    }
+
+    $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
+    $params[":id"] = $userID;
+
+
+    if(isset($startDate) && isset($endDate)){
+        $query .= " AND BETWEEN created :start AND :end";
+        $params[":start"] = $startDate;
+        $params[":end"] = $endDate;
+    }
+
+    if(isset($action)){
+        $query .= " AND action_type = :action";
+        $params[":action"] = $action;
+    }
+
+    $query .= " ORDER BY created LIMIT :offset, :count";
+    $params[":offset"] = $offset;
+    $params[":count"] = $perPage;
+
+    $stmt = $db->prepare($query);
+    foreach ($params as $key=>$val) {
+        if ($key == ":offset" || $key == ":count") {
+            $stmt->bindValue($key, $val, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue($key, $val);
+        }
+    }
 
 ?>
 
@@ -194,60 +245,6 @@ if(!$allSet) {
         Created November 2020
     </address>
 </div>
-<?php
-if(isset($_POST["submit"]) || $allSet){
-    if(isset($_POST["submit"])) {
-        $action = $_POST["actionType"];
-
-        $startDate = $_POST["startDate"];
-        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
-
-        $endDate = $_POST["endDate"];
-        $endDate = date('Y-m-d H:i:s', strtotime($endDate));
-    }
-
-    if (isset($acctId) && isset($action)) {
-        $stmt = $db->prepare("SELECT COUNT(*) AS total FROM TPTransactions WHERE act_src_id = :acctID AND action_type = :action");
-        $stmt->execute([":acctID" => $acctId,
-            ":action" => $action]);
-
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $total = 0;
-        if ($result) {
-            $total = (int)$result["total"];
-        }
-        $totalPages = ceil($total / $perPage);
-        $offset = ($page - 1) * $perPage;
-    }
-
-    $query = "SELECT amount, action_type, memo, created FROM TPTransactions WHERE act_src_id = :id";
-    $params[":id"] = $userID;
-
-
-    if(isset($startDate) && isset($endDate)){
-        $query .= " AND BETWEEN created :start AND :end";
-        $params[":start"] = $startDate;
-        $params[":end"] = $endDate;
-    }
-
-    if(isset($action)){
-        $query .= " AND action_type = :action";
-        $params[":action"] = $action;
-    }
-
-    $query .= " ORDER BY created LIMIT :offset, :count";
-    $params[":offset"] = $offset;
-    $params[":count"] = $perPage;
-
-    $stmt = $db->prepare($query);
-    foreach ($params as $key=>$val){
-        if($key == ":offset" || $key == ":count"){
-            $stmt->bindValue($key, $val, PDO::PARAM_INT);
-        } else {
-            $stmt->bindValue($key,$val);
-        }
-    }
-}
-require(__DIR__ . "/partials/flash.php");?>
+<?php require(__DIR__ . "/partials/flash.php");?>
 </body>
 </html>

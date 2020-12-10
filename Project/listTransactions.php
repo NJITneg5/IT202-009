@@ -16,6 +16,7 @@ $action = null;
 $startDate = null;
 $endDate = null;
 $allSet = false;
+$epochDay= "1970-01-01 00:00:00";
 
 if(isset($_GET["page"])){
     try{
@@ -114,23 +115,19 @@ if(isset($acctId)) {    //To get info on the account
         $action = $_POST["actionType"];
 
         if (isset($_POST["startDate"])) {
-            $startDate = $_POST["startDate"];
-            flash($startDate);
-            $startDate = date('Y-m-d H:i:s', strtotime($startDate));
-            flash($startDate);
-        } else {
-            $startDate = date('Y-m-d H:i:s', strtotime($startDate));
-            flash($startDate);
+            $date = $_POST["startDate"];
+            $date = date('Y-m-d H:i:s', strtotime($date));
+            if($date > $epochDay){
+                $startDate = $date;
+            }
         }
 
         if (isset($_POST["endDate"])) {
-            $endDate = $_POST["endDate"];
-            flash($endDate);
-            $endDate = date('Y-m-d H:i:s', strtotime($endDate));
-            flash($endDate);
-        } else {
-            $endDate = date('Y-m-d H:i:s', strtotime($endDate));
-            flash($endDate);
+            $date = $_POST["endDate"];
+            $date = date('Y-m-d H:i:s', strtotime($date));
+            if($date > $epochDay){
+                $endDate = $date;
+            }
         }
     }
 

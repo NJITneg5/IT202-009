@@ -9,16 +9,19 @@ if (!is_logged_in()) {
 <div class="bodyMain">
     <h1>Please Create An Account With Our Bank</h1>
 
+    <h5><i>Please note: Starting APY at our bank for a savings account is 0.05% and 9% for our loans.</i></h5>
+
     <form method="POST">
         <label>Account Type:<br>
             <!--TODO Add other account types such as savings when time comes-->
             <select name="accountType">
                 <option value="checking">Checking</option>
-            </select> <br><br>
-        </label>
+                <option value="savings">Savings</option>
+            </select>
+        </label><br><br>
         <label>Initial Deposit: (Minimum of $5.00 is needed.)<br>
-            <input name="initBalance" type="text" placeholder="00.00"><br><br>
-        </label>
+            <input name="initBalance" type="text" placeholder="00.00">
+        </label><br><br>
         <input type="submit" name="submit" value="Create">
         <input type="reset" value="Reset">
 
@@ -56,7 +59,7 @@ if(isset($_POST["submit"])){
 
     while(!$uniqueNum && $uniqueCount < 10 && $isValid) {    //Loop to generate a unique account number
         $newActNum = rand(100000000000, 999999999999);
-        str_pad($newActNum,12,"0",STR_PAD_LEFT);
+        //str_pad($newActNum,12,"0",STR_PAD_LEFT);
         $stmt = $db->prepare("SELECT account_number from TPAccounts WHERE account_number = :num");
         $r = $stmt->execute([
             ":num"=>$newActNum
@@ -102,6 +105,12 @@ if(isset($_POST["submit"])){
             flash("Error getting id for new account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
+    }
+
+    if($isValid && strcmp($accountType, "savings") == 0){
+        $stmt = $db->prepare("UPDATE TPAccounts SET apy = :apy, nextApy = DATE_ADD(current_date, INTERVAL 1 MONTH) WHERE id = :id");
+        $r = $stmt->execute([":apy" => 0.05,
+                             ":id" => $actID]);
     }
 
     if($isValid){

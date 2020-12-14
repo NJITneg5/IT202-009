@@ -34,9 +34,10 @@ if($r){
 }
 
 $stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, IFNULL(apy, 'N/A') as apy FROM TPAccounts WHERE user_id = :id ORDER BY opened_date LIMIT :offset, :count");
-$r = $stmt->execute([":id" => $userID,
-                     ":offset" => $offset,
-                     ":count" => $perPage]);
+$stmt->bindValue(":id",$userID);
+$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+$stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
+$r = $stmt->execute();
 if ($r) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {

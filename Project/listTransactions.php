@@ -50,7 +50,7 @@ $db = getDB();
 $userID = get_user_id();
 
 if(isset($acctId)) {    //To get info on the account
-    $stmt = $db->prepare("SELECT account_number, balance, IFNULL('none', apy) as apy FROM TPAccounts WHERE id = :id AND user_id = :userID");
+    $stmt = $db->prepare("SELECT account_number, balance, IFNULL(apy, 'none') as apy FROM TPAccounts WHERE id = :id AND user_id = :userID");
     $r = $stmt->execute([
             ":id" => $acctId,
             ":userID" => $userID

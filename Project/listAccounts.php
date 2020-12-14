@@ -23,21 +23,25 @@ if(isset($_GET["page"])){
     }
 }
 
-
-$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, COUNT(*) as accounts, IFNULL('N/A', apy) as apy FROM TPAccounts WHERE user_id = :id LIMIT :page");
+$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, IFNULL(apy, 'N/A') as apy FROM TPAccounts WHERE user_id = :id LIMIT :page");
 $r = $stmt->execute([":id" => $userID,
                      "page" => $perPage]);
 if ($r) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $total = 0;
-    $total = (int)$results["accounts"];
-
-    $totalPages = ceil($total/ $perPage);
-    $offset = ($page - 1) * $perPage;
 } else {
     $e = $stmt->errorInfo();
     flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
+}
+
+$stmt = $db->prepare("SELECT COUNT(*) as total from TPAccounts WHERE user_id = :id");
+$r = $stmt->execute([":id" => $userID]);
+if($r){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $total = 0;
+    $total = (int)$result["total"];
+
+    $totalPages = ceil($total/ $perPage);
+    $offset = ($page - 1) * $perPage;
 }
 ?>
 

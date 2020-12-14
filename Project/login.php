@@ -88,6 +88,7 @@
                 }
 
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
                 if ($result && isset($result["password"])) {
                     $password_hash_from_db = $result["password"];
                     if (password_verify($password, $password_hash_from_db)) {
@@ -106,6 +107,10 @@
                         }
                         //on successful login let's serve-side redirect the user to the home page.
                         flash("Log in Successful.");
+
+                        calcSavingsAPY();
+
+                        //calcLoanAPY();
                         die(header("Location: home.php"));
                     }
                     else {

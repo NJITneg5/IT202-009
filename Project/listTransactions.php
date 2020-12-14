@@ -50,7 +50,7 @@ $db = getDB();
 $userID = get_user_id();
 
 if(isset($acctId)) {    //To get info on the account
-    $stmt = $db->prepare("SELECT account_number, balance FROM TPAccounts WHERE id = :id AND user_id = :userID");
+    $stmt = $db->prepare("SELECT account_number, balance, IFNULL('none', apy) as apy FROM TPAccounts WHERE id = :id AND user_id = :userID");
     $r = $stmt->execute([
             ":id" => $acctId,
             ":userID" => $userID
@@ -60,6 +60,7 @@ if(isset($acctId)) {    //To get info on the account
         $acctResults = $stmt->fetch(PDO::FETCH_ASSOC);
         $acctNum = $acctResults["account_number"];
         $balance = $acctResults["balance"];
+        $apy = $acctResults["apy"];
     }else {
         $e = $stmt->errorInfo();
         flash("Error fetching account information, likely from trying to access an account that is not yours. Please refrain from doing that.");
@@ -168,7 +169,9 @@ if(isset($acctId)) {    //To get info on the account
 
     <h4>Account Number: <?php safer_echo($acctNum);?></h4>
     <h4>Balance: $<?php safer_echo($balance);?></h4>
-
+    <?php if(strcmp($apy, "none") != 0): ?>
+    <h4>APY: <?php echo rtrim((float)$apy, '0') . "%";?></h4>
+    <?php endif; ?>
     <h6><strong>List Filters:</strong></h6>
     <form method="POST">
         <label>Action Type:

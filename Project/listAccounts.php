@@ -11,10 +11,30 @@ $userID = get_user_id();
 $db = getDB();
 $results = 0;
 
-$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance FROM TPAccounts WHERE user_id = :id LIMIT 5");
-$r = $stmt->execute([":id" => $userID]);
+$page = 1;
+$perPage = 10;
+
+if(isset($_GET["page"])){
+    try{
+        $page = (int)$_GET["page"];
+    }
+    catch(Exception $e){
+
+    }
+}
+
+
+$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, COUNT(*) as accounts, IFNULL('N/A', apy) as apy FROM TPAccounts WHERE user_id = :id LIMIT :page");
+$r = $stmt->execute([":id" => $userID,
+                     "page" => $perPage]);
 if ($r) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $total = 0;
+    $total = (int)$results["accounts"];
+
+    $totalPages = ceil($total/ $perPage);
+    $offset = ($page - 1) * $perPage;
 } else {
     $e = $stmt->errorInfo();
     flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
@@ -31,6 +51,7 @@ if ($r) {
                     <th>Account Number</th>
                     <th>Account Type</th>
                     <th>Account Balance</th>
+                    <th>Interest Rate</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -40,6 +61,12 @@ if ($r) {
                         <td><?php safer_echo($r["account_number"]);?></td>
                         <td><?php safer_echo($r["account_type"]);?></td>
                         <td>$<?php safer_echo($r["balance"]);?></td>
+                        <td><?php if(strcmp($r["apy"], "N/A") == 0) {
+                                echo "N/A";
+                            } else {
+                                safer_echo(rtrim((float)$r["apy"], '0') . "%");
+                            }
+                        ?></td>
                         <td><a href="<?php echo getURL("listTransactions.php?id=" . $r["id"]);?>">View Transactions</a></td>
                     </tr>
                 <?php endforeach;?>
@@ -49,6 +76,23 @@ if ($r) {
         <p>You do not have any accounts with our bank. Click here to create one: </p>
         <a href="<?php echo getURL("createAccount.php")?>">Create Account</a>
     <?php endif; ?>
+
+    <div class="listNav">
+        <ul class="pagination justify-content-center">
+            <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
+                <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+            </li>
+            <?php for($i = 0; $i < $totalPages; $i++):?>
+                <li class="page-item <?php echo ($page-1) == $i?"active":"";?>">
+                    <a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a>
+                </li>
+            <?php endfor; ?>
+            <li class="page-item <?php echo $page >= $totalPages?"disabled":"";?>">
+                <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
+            </li>
+        </ul>
+    </div>
+
     <hr>
 
     <address>

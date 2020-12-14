@@ -22,17 +22,6 @@ if(isset($_GET["page"])){
 
     }
 }
-
-$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, IFNULL(apy, 'N/A') as apy FROM TPAccounts WHERE user_id = :id LIMIT :page");
-$r = $stmt->execute([":id" => $userID,
-                     "page" => $perPage]);
-if ($r) {
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    $e = $stmt->errorInfo();
-    flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
-}
-
 $stmt = $db->prepare("SELECT COUNT(*) as total from TPAccounts WHERE user_id = :id");
 $r = $stmt->execute([":id" => $userID]);
 if($r){
@@ -42,6 +31,17 @@ if($r){
 
     $totalPages = ceil($total/ $perPage);
     $offset = ($page - 1) * $perPage;
+}
+
+$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, IFNULL(apy, 'N/A') as apy FROM TPAccounts WHERE user_id = :id ORDER BY opened_date LIMIT :offset, :count");
+$r = $stmt->execute([":id" => $userID,
+                     ":offset" => $offset,
+                     ":count" => $perPage]);
+if ($r) {
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $e = $stmt->errorInfo();
+    flash("There was an error fetching your accounts. Please contact a bank representative and relay the following error code. " . var_export($e, true));
 }
 ?>
 

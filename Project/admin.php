@@ -91,8 +91,12 @@ if(isset($_POST["searchSub"])){
             <tbody>
             <?php foreach ($searchResults as $r):?>
                 <?php
-                    $lastNameOut = $r["users.lastName"];
-                    $firstNameOut = $r["users.firstName"];
+                    if(!empty($r["users.lastName"])){
+                        $lastNameOut = $r["users.lastName"];
+                    }
+                    if(!empty($r["users.firstName"])) {
+                        $firstNameOut = $r["users.firstName"];
+                    }
                     $enabledOut = $r["users.enabled"];
                     $accountNumOut = $r["account.account_number"];
                     $accountTypeOut = $r["account.account_type"];

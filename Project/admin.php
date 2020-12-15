@@ -39,7 +39,7 @@ if(isset($_POST["searchSub"])){
         }
     }
 
-    $query .= " ORDER BY lastName";
+    $query .= " ORDER BY last";
 
     $stmt = $db->prepare($query);
 

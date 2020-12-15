@@ -226,7 +226,7 @@ if(isset($acctId)) {    //To get info on the account
             </tbody>
         </table>
     <?php else: ?>
-        <p>There are no transactions for this account. (Which is bad, because there should at least be a "Initial Deposit")</p>
+        <p>There are no transactions for this account.</p>
     <?php endif; ?>
     <br>
     <div class="listNav">

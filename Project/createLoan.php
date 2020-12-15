@@ -164,7 +164,7 @@ if(isset($_POST["submit"])){
             ":world" => $worldID,
             ":amount" => (float)$initBalance,
             ":action" => "deposit",
-            ":memo" => "Initial Deposit",
+            ":memo" => "Loan Deposit",
             ":total" => ($depositTotal + $initBalance)
         ]);
 

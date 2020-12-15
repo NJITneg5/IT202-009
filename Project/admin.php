@@ -90,15 +90,25 @@ if(isset($_POST["searchSub"])){
             </thead>
             <tbody>
             <?php foreach ($searchResults as $r):?>
+                <?php
+                    $lastNameOut = $r["users.lastName"];
+                    $firstNameOut = $r["users.firstName"];
+                    $enabledOut = $r["users.enabled"];
+                    $accountNumOut = $r["account.account_number"];
+                    $accountTypeOut = $r["account.account_type"];
+                    $balanceOut = $r["account.balance"];
+                    $activeOut = $r["account.active"];
+                    $frozenOut = $r["account.frozen"];
+                ?>
                 <tr class="listRow">
-                    <td><?php safer_echo($r["users.lastName"]);?></td>
-                    <td><?php safer_echo($r["users.firstName"]);?></td>
-                    <td><?php safer_echo($r["users.enabled"]);?></td>
-                    <td><?php safer_echo($r["account.account_number"]);?></td>
-                    <td><?php safer_echo($r["account.account_type"]);?></td>
-                    <td>$<?php safer_echo($r["account.balance"]);?></td>
-                    <td><?php safer_echo($r["account.active"]);?></td>
-                    <td><?php safer_echo($r["account.frozen"]);?></td>
+                    <td><?php safer_echo($lastNameOut);?></td>
+                    <td><?php safer_echo($firstNameOut);?></td>
+                    <td><?php safer_echo($enabledOut);?></td>
+                    <td><?php safer_echo($accountNumOut);?></td>
+                    <td><?php safer_echo($accountTypeOut);?></td>
+                    <td>$<?php safer_echo($balanceOut);?></td>
+                    <td><?php safer_echo($activeOut);?></td>
+                    <td><?php safer_echo($frozenOut);?></td>
                     <td><a href="adminCreate.php?userID=<?php echo $r["users.id"]?>">Create Checking Account for User</a>, <a href="disableUser.php?userID=<?php echo $r["users.id"]?>&enable=<?php echo $r["users.enabled"]?>">Enable/Disable User</a><br>
                         <a href="freezeAccount.php?id=<?php echo $r["account.id"]?>&frozen=<?php echo $r["frozen"]?>">(Un)Freeze Account</a><a href="adminTransactions.php?id= <?php echo $r["account.id"]?>">View Account's Transactions</a></td>
                 </tr>

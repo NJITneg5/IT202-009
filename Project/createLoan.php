@@ -82,18 +82,27 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid) {  //Creates the loan account
-        $stmt = $db->prepare("INSERT INTO TPAccounts (account_number, account_type, balance, user_id, apy, nextApy) VALUES(:accountNum, :accountType, :initBalance, :userID, :apy, :nextApy)");
+        $stmt = $db->prepare("INSERT INTO TPAccounts (account_number, account_type, balance, user_id, apy) VALUES(:accountNum, :accountType, :initBalance, :userID, :apy)");
         $r = $stmt->execute([
             ":accountNum" => $newActNum,
             ":accountType" => "loan",
             ":initBalance" => $initBalance * -1,
             ":userID" => $user,
-            ":apy" => 9.0,
-            ":nextApy" => "DATE_ADD(current_date, INTERVAL 1 MONTH)"
+            ":apy" => 9.0
         ]);
         if ($r) {
             flash("Account created successfully with Account Number: " . $newActNum);
         } else {
+            $e = $stmt->errorInfo();
+            $isValid = false;
+            flash("There was an error creating the account. Please try again." . var_export($e, true));
+        }
+    }
+
+    if($isValid){
+        $stmt = $db->prepare("UPDATE TPAccounts SET nextApy = DATE_ADD(current_date, INTERVAL 1 MONTH) WHERE account_number = :accountNum");
+        $r = $stmt->execute([":accountNum" => $newActNum]);
+        if(!$r){
             $e = $stmt->errorInfo();
             $isValid = false;
             flash("There was an error creating the account. Please try again." . var_export($e, true));

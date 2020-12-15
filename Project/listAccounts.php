@@ -22,7 +22,7 @@ if(isset($_GET["page"])){
 
     }
 }
-$stmt = $db->prepare("SELECT COUNT(*) as total from TPAccounts WHERE user_id = :id");
+$stmt = $db->prepare("SELECT COUNT(*) as total from TPAccounts WHERE user_id = :id AND active = 'true'");
 $r = $stmt->execute([":id" => $userID]);
 if($r){
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,7 +33,7 @@ if($r){
     $offset = ($page - 1) * $perPage;
 }
 
-$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, IFNULL(apy, 'N/A') as apy FROM TPAccounts WHERE user_id = :id ORDER BY opened_date LIMIT :offset, :count");
+$stmt = $db->prepare("SELECT id, account_number, account_type, IFNULL(balance,'0.00') AS balance, IFNULL(apy, 'N/A') as apy FROM TPAccounts WHERE user_id = :id AND active = 'true' ORDER BY opened_date LIMIT :offset, :count");
 $stmt->bindValue(":id",$userID);
 $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
 $stmt->bindValue(":count", $perPage, PDO::PARAM_INT);
@@ -77,7 +77,7 @@ if ($r) {
                                 safer_echo(rtrim((float)$r["apy"], '0') . "%");
                             }
                         ?></td>
-                        <td><a href="<?php echo getURL("listTransactions.php?id=" . $r["id"]);?>">View Transactions</a></td>
+                        <td><a href="<?php echo getURL("listTransactions.php?id=" . $r["id"]);?>">View Transactions</a> , <a href="<?php echo getURL("closeAccount.php?id=" . $r["id"]);?>">Close Account</a></td>
                     </tr>
                 <?php endforeach;?>
             </tbody>

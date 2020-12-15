@@ -14,7 +14,7 @@ if(isset($_GET["action"])){
 $userID = get_user_id();
 $db=getDB();
 
-$stmt = $db->prepare("SELECT id, account_number FROM TPAccounts WHERE user_id = :userID");
+$stmt = $db->prepare("SELECT id, account_number FROM TPAccounts WHERE user_id = :userID AND active = 'true'");
 $r = $stmt->execute([":userID" => $userID]);
 $acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

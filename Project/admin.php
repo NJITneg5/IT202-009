@@ -19,26 +19,30 @@ if(isset($_POST["searchSub"])){
 
     if(isset($_POST["firstName"])){
         $firstName = $_POST["firstName"];
+        echo $firstName;
         $query .= " WHERE firstName = :firstName";
         $params["firstName"] = $firstName;
     }
     if(isset($_POST["lastName"])){
         $lastName = $_POST["lastName"];
+        echo $lastName;
         $query .= " AND lastName = :lastName";
         $params[":lastName"] = $lastName;
     }
     if(isset($_POST["partialAct"])){
         $partialAct = (float)$_POST["partialAct"];
+        echo $partialAct;
         $query .= " AND account_number LIKE '%:num%'";
         $params[":num"] = $partialAct;
     }
 
     $query .= " ORDER BY lastName";
-
+    echo $query;
     $stmt = $db->prepare($query);
 
     foreach($params as $key=>$val){
         $stmt->bindValue($key, $val);
+        echo $key . " " . $val;
     }
     $r = $stmt->execute();
     if($r){

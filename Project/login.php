@@ -69,12 +69,12 @@
             if (isset($db)) {
                 if($email != null) {
                     $email = $userEmail;
-                    $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE email = :email LIMIT 1");
+                    $stmt = $db->prepare("SELECT id, email, username, password, enabled from TPUsers WHERE email = :email LIMIT 1");
                     $params = array(":email" => $email);
                 }
                 elseif ($user != null) {
                     $user = $userEmail;
-                    $stmt = $db->prepare("SELECT id, email, username, password from TPUsers WHERE username = :user LIMIT 1");
+                    $stmt = $db->prepare("SELECT id, email, username, password, enabled from TPUsers WHERE username = :user LIMIT 1");
                     $params = array(":user" => $user);
                 }
 
@@ -90,32 +90,35 @@
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($result && isset($result["password"])) {
-                    $password_hash_from_db = $result["password"];
-                    if (password_verify($password, $password_hash_from_db)) {
-                        $stmt = $db->prepare("SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.role_id where TPUserRoles.user_id = :user_id and TPRoles.is_active = 1 and TPUserRoles.is_active = 1");
-                        $stmt->execute([":user_id" => $result["id"]]);
-                        $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    if(strcmp($result["enabled"], "true") == 0) {
+                        $password_hash_from_db = $result["password"];
+                        if (password_verify($password, $password_hash_from_db)) {
+                            $stmt = $db->prepare("SELECT TPRoles.name FROM TPRoles JOIN TPUserRoles on TPRoles.id = TPUserRoles.role_id where TPUserRoles.user_id = :user_id and TPRoles.is_active = 1 and TPUserRoles.is_active = 1");
+                            $stmt->execute([":user_id" => $result["id"]]);
+                            $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        unset($result["pw"]);//remove password so we don't leak it beyond this page
-                        //let's create a session for our user based on the other data we pulled from the table
-                        $_SESSION["user"] = $result;//we can save the entire result array since we removed password
-                        if ($roles) {
-                            $_SESSION["user"]["roles"] = $roles;
+                            unset($result["pw"]);//remove password so we don't leak it beyond this page
+                            //let's create a session for our user based on the other data we pulled from the table
+                            $_SESSION["user"] = $result;//we can save the entire result array since we removed password
+                            if ($roles) {
+                                $_SESSION["user"]["roles"] = $roles;
+                            } else {
+                                $_SESSION["user"]["roles"] = [];
+                            }
+                            //on successful login let's serve-side redirect the user to the home page.
+                            flash("Log in Successful.");
+
+                            calcSavingsAPY();
+
+                            calcLoanAPY();
+
+                            die(header("Location: home.php"));
+                        } else {
+                            flash("Invalid password, try again");
                         }
-                        else {
-                            $_SESSION["user"]["roles"] = [];
-                        }
-                        //on successful login let's serve-side redirect the user to the home page.
-                        flash("Log in Successful.");
-
-                        calcSavingsAPY();
-
-                        calcLoanAPY();
-
-                        die(header("Location: home.php"));
                     }
                     else {
-                        flash("Invalid password, try again");
+                        flash("This user has been disabled by an admin");
                     }
                 }
                 else {

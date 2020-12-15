@@ -170,7 +170,7 @@ if(isset($acctId)) {    //To get info on the account
 
     <h4>Account Number: <?php safer_echo($acctNum);?></h4>
 
-    <h4>Balance: $<?php if(strcmp($acctType, "loan") == 0) {
+    <h4>Balance: $<?php if(strcmp($acctType, "loan") == 0 && (float)$balance != 0) {
             safer_echo((float)$balance * -1);
         } else {
             safer_echo($balance);

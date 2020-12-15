@@ -117,7 +117,7 @@ function calcSavingsAPY(){
         $worldBalance = getWorldBalance();
         foreach($accounts as $account) {
             $apy = $account["apy"];
-            $apy /= 12;
+            $apy /= 1200; //Gets the monthly and turns the .05% is 0.0005. 12 * 100 = 1200
             $balance = (float)$account["balance"];
             $change = $balance * $apy;
 
@@ -202,7 +202,7 @@ function calcSavingsAPY(){
         }
     }
 }
-/*
+
 function calcLoanAPY(){
     $db = getDB();
     $numMonths = 1;
@@ -214,7 +214,7 @@ function calcLoanAPY(){
         $worldBalance = getWorldBalance();
         foreach($accounts as $account) {
             $apy = $account["apy"];
-            $apy /= 12;
+            $apy /= 1200; //Gets the monthly and turns the 9% is 0.09. 12 * 100 = 1200
             $balance = (float)$account["balance"];
             $change = $balance * $apy;
 
@@ -298,4 +298,4 @@ function calcLoanAPY(){
             }
         }
     }
-}*/
+}

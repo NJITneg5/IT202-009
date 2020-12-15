@@ -19,30 +19,32 @@ if(isset($_POST["searchSub"])){
 
     if(isset($_POST["firstName"])){
         $firstName = $_POST["firstName"];
-        echo $firstName;
-        $query .= " WHERE firstName = :firstName";
-        $params["firstName"] = $firstName;
+        if(!empty($firstName)) {
+            $query .= " WHERE firstName = :firstName";
+            $params[":firstName"] = $firstName;
+        }
     }
     if(isset($_POST["lastName"])){
         $lastName = $_POST["lastName"];
-        echo $lastName;
-        $query .= " AND lastName = :lastName";
-        $params[":lastName"] = $lastName;
+        if(!empty($lastName)) {
+            $query .= " AND lastName = :lastName";
+            $params[":lastName"] = $lastName;
+        }
     }
-    if(isset($_POST["partialAct"])){
+    if(isset($_POST["partialAct"])) {
         $partialAct = (float)$_POST["partialAct"];
-        echo $partialAct;
-        $query .= " AND account_number LIKE '%:num%'";
-        $params[":num"] = $partialAct;
+        if ($partialAct != 0) {
+            $query .= " AND account_number LIKE '%:num%'";
+            $params[":num"] = $partialAct;
+        }
     }
 
     $query .= " ORDER BY lastName";
-    echo $query;
+
     $stmt = $db->prepare($query);
 
     foreach($params as $key=>$val){
         $stmt->bindValue($key, $val);
-        echo $key . " " . $val;
     }
     $r = $stmt->execute();
     if($r){
@@ -64,7 +66,7 @@ if(isset($_POST["searchSub"])){
         <label>Last Name: <br>
             <input type="text" name="lastName" placeholder="Doe">
         </label><br><br>
-        <label>Partial Account #:
+        <label>Partial Account #:<br>
             <input type="text" name="partialAct" placeholder="1234"
         </label><br><br>
         <input type="submit" name="searchSub" value="Submit">

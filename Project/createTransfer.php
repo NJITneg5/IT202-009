@@ -12,52 +12,6 @@ $stmt = $db->prepare("SELECT id, account_number FROM TPAccounts WHERE user_id = 
 $r = $stmt->execute([":userID" => $userID]);
 $acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-?>
-
-<div class="bodyMain">
-    <h1>Transfer Between My Accounts</h1>
-
-    <form method="POST">
-        <label>From Account Selection:<br>
-            <select name="srcSelect">
-                <?php foreach($acctResults as $r ): ?>
-                    <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
-                <?php endforeach;?>
-            </select>
-        </label> <br><br>
-
-        <label>To Account Selection<br>
-            <select name="destSelect">
-                <?php foreach($acctResults as $r ): ?>
-                    <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
-                <?php endforeach;?>
-            </select>
-        </label> <br><br>
-
-        <label>Amount:<br>
-            <input type="text" name="amount" placeholder="00.00">
-        </label> <br><br>
-
-        <label>Memo:<br>
-            <input type="text" name="memo" placeholder="e.g Paycheck or Car Payment">
-        </label> <br><br>
-
-        <input type="submit" value="Submit" name="submit">
-        <input type="reset" value="Reset">
-    </form>
-
-    <hr>
-
-    <address>
-        Page made by Nate Gile
-        for Internet Applications Final Project.
-        Created November 2020
-    </address>
-</div>
-
-<!--PHP Shenanigans -->
-<?php
 if(isset($_POST["submit"])){
     $db= getDB();
 
@@ -208,6 +162,52 @@ if(isset($_POST["submit"])){
     }
 }
 
+
+?>
+
+<div class="bodyMain">
+    <h1>Transfer Between My Accounts</h1>
+
+    <form method="POST">
+        <label>From Account Selection:<br>
+            <select name="srcSelect">
+                <?php foreach($acctResults as $r ): ?>
+                    <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
+                <?php endforeach;?>
+            </select>
+        </label> <br><br>
+
+        <label>To Account Selection<br>
+            <select name="destSelect">
+                <?php foreach($acctResults as $r ): ?>
+                    <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
+                <?php endforeach;?>
+            </select>
+        </label> <br><br>
+
+        <label>Amount:<br>
+            <input type="text" name="amount" placeholder="00.00">
+        </label> <br><br>
+
+        <label>Memo:<br>
+            <input type="text" name="memo" placeholder="e.g Paycheck or Car Payment">
+        </label> <br><br>
+
+        <input type="submit" value="Submit" name="submit">
+        <input type="reset" value="Reset">
+    </form>
+
+    <hr>
+
+    <address>
+        Page made by Nate Gile
+        for Internet Applications Final Project.
+        Created November 2020
+    </address>
+</div>
+
+<!--PHP Shenanigans -->
+<?php
 require(__DIR__ . "/partials/flash.php");
 ?>
 </body>

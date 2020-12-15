@@ -5,6 +5,7 @@
         <p>How would you like to conduct business with us today:</p>
         <ul class="dashLinks">
             <li><a href="<?php echo getURL("createAccount.php")?>">Create Account</a></li>
+            <li><a href="<?php echo getURL("createLoan.php")?>">Create Loan Account</a></li>
             <li><a href="<?php echo getURL("listAccounts.php")?>">My Accounts</a></li>
             <li><a href="<?php echo getURL("createTransaction.php?action=0")?>">Deposit</a></li>
             <li><a href="<?php echo getURL("createTransaction.php?action=1")?>">Withdrawal</a></li>

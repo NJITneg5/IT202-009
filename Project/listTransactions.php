@@ -50,7 +50,7 @@ $db = getDB();
 $userID = get_user_id();
 
 if(isset($acctId)) {    //To get info on the account
-    $stmt = $db->prepare("SELECT account_number, balance, IFNULL(apy, 'none') as apy FROM TPAccounts WHERE id = :id AND user_id = :userID");
+    $stmt = $db->prepare("SELECT account_number, balance, account_type, IFNULL(apy, 'none') as apy FROM TPAccounts WHERE id = :id AND user_id = :userID");
     $r = $stmt->execute([
             ":id" => $acctId,
             ":userID" => $userID
@@ -60,6 +60,7 @@ if(isset($acctId)) {    //To get info on the account
         $acctResults = $stmt->fetch(PDO::FETCH_ASSOC);
         $acctNum = $acctResults["account_number"];
         $balance = $acctResults["balance"];
+        $acctType = $acctResults["account_type"];
         $apy = $acctResults["apy"];
     }else {
         $e = $stmt->errorInfo();
@@ -168,7 +169,13 @@ if(isset($acctId)) {    //To get info on the account
     <h1>Recent Transactions on this Account</h1>
 
     <h4>Account Number: <?php safer_echo($acctNum);?></h4>
-    <h4>Balance: $<?php safer_echo($balance);?></h4>
+
+    <h4>Balance: $<?php if(strcmp($acctType, "loan") == 0 && (float)$balance != 0) {
+            safer_echo((float)$balance * -1);
+        } else {
+            safer_echo($balance);
+        };?></h4>
+
     <?php if(strcmp($apy, "none") != 0): ?>
     <h4>APY: <?php echo rtrim((float)$apy, '0') . "%";?></h4>
     <?php endif; ?>
@@ -219,7 +226,7 @@ if(isset($acctId)) {    //To get info on the account
             </tbody>
         </table>
     <?php else: ?>
-        <p>There are no transactions for this account. (Which is bad, because there should at least be a "Initial Deposit")</p>
+        <p>There are no transactions for this account.</p>
     <?php endif; ?>
     <br>
     <div class="listNav">

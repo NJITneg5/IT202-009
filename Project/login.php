@@ -110,7 +110,8 @@
 
                         calcSavingsAPY();
 
-                        //calcLoanAPY();
+                        calcLoanAPY();
+
                         die(header("Location: home.php"));
                     }
                     else {

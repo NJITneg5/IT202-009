@@ -65,7 +65,12 @@ if ($r) {
                     <tr class="listRow">
                         <td><?php safer_echo($r["account_number"]);?></td>
                         <td><?php safer_echo($r["account_type"]);?></td>
-                        <td>$<?php safer_echo($r["balance"]);?></td>
+                        <td>$<?php if(strcmp($r["account_type"], 'loan') == 0 && (float)$r["balance"] != 0){
+                                safer_echo((float)$r["balance"] * -1);
+                            }else {
+                                safer_echo($r["balance"]);
+                            }
+                            ?></td>
                         <td><?php if(strcmp($r["apy"], "N/A") == 0) {
                                 echo "N/A";
                             } else {

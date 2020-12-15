@@ -4,21 +4,30 @@ if (!is_logged_in()) {
     flash("You must be logged in to access this page");
     die(header("Location: login.php"));
 }
+
+$userID = get_user_id();
+$db=getDB();
+
+$stmt = $db->prepare("SELECT id, account_number FROM TPAccounts WHERE user_id = :userID");
+$r = $stmt->execute([":userID" => $userID]);
+$acctResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <div class="bodyMain">
-    <h1>Please Create An Account With Our Bank</h1>
+    <h1>Please Create A Loan Account With Our Bank</h1>
 
-    <h5><i>Please note: Starting APY at our bank for a savings account is 0.05%.</i></h5>
+    <h5><i>Please note: Starting APY at our bank for a loan is 9%.</i></h5>
 
     <form method="POST">
-        <label>Account Type:<br>
-            <select name="accountType">
-                <option value="checking">Checking</option>
-                <option value="savings">Savings</option>
+        <label>Account To Deposit Funds into:<br>
+            <select name="depositAcct">
+                <?php foreach($acctResults as $r ): ?>
+                    <option value="<?php echo $r["id"]?>"><?php echo $r["account_number"]?></option>
+                <?php endforeach;?>
             </select>
         </label><br><br>
-        <label>Initial Deposit: (Minimum of $5.00 is needed.)<br>
+        <label>Loaned Amount: (Minimum of $500.00 is needed.)<br>
             <input name="initBalance" type="text" placeholder="00.00">
         </label><br><br>
         <input type="submit" name="submit" value="Create">
@@ -46,11 +55,11 @@ if(isset($_POST["submit"])){
     $uniqueNum = false;     //Check to make sure account number is available
     $uniqueCount = 0;       //Makes sure that the unique account check only runs a certain amount of times
 
-    $accountType = $_POST["accountType"];
+    $depositAccount = $_POST["depositAcct"];
     $initBalance = $_POST["initBalance"];
     $user = get_user_id();
 
-    if((float)$initBalance >= 5.0){ //Checks to make sure that the initial balance variable can be stripped to float and is greater than or equal to 5.0
+    if((float)$initBalance >= 500.0){ //Checks to make sure that the initial balance variable can be stripped to float and is greater than or equal to 5.0
         $isValid = true;
     }else{
         flash("You did not enter a valid initial deposit. Please Try again.");
@@ -59,9 +68,7 @@ if(isset($_POST["submit"])){
     while(!$uniqueNum && $uniqueCount < 10 && $isValid) {    //Loop to generate a unique account number
         $newActNum = rand(100000000000, 999999999999);
         $stmt = $db->prepare("SELECT account_number from TPAccounts WHERE account_number = :num");
-        $r = $stmt->execute([
-            ":num"=>$newActNum
-        ]);
+        $r = $stmt->execute([":num"=>$newActNum]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if(empty($result)){
             $uniqueNum = true;
@@ -74,13 +81,14 @@ if(isset($_POST["submit"])){
         flash("There was an error creating unique account number. Please try again.");
     }
 
-    if($isValid) {  //Creates the account
-        $stmt = $db->prepare("INSERT INTO TPAccounts (account_number, account_type, balance, user_id) VALUES(:accountNum, :accountType, :initBalance, :userID)");
+    if($isValid) {  //Creates the loan account
+        $stmt = $db->prepare("INSERT INTO TPAccounts (account_number, account_type, balance, user_id, apy) VALUES(:accountNum, :accountType, :initBalance, :userID, :apy)");
         $r = $stmt->execute([
             ":accountNum" => $newActNum,
-            ":accountType" => $accountType,
+            ":accountType" => "loan",
             ":initBalance" => 0,
-            ":userID" => $user
+            ":userID" => $user,
+            ":apy" => 9.0
         ]);
         if ($r) {
             flash("Account created successfully with Account Number: " . $newActNum);
@@ -92,26 +100,25 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Get id of new Account
-        $stmt = $db->prepare("SELECT id FROM TPAccounts WHERE account_number = :newActNum");
-        $r = $stmt->execute([":newActNum" => $newActNum]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $actID = $result["id"];
-
-        if (!$r) {
+        $stmt = $db->prepare("UPDATE TPAccounts SET nextApy = DATE_ADD(current_date, INTERVAL 1 MONTH) WHERE account_number = :accountNum");
+        $r = $stmt->execute([":accountNum" => $newActNum]);
+        if(!$r){
             $e = $stmt->errorInfo();
-            flash("Error getting id for new account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
+            flash("There was an error creating the account. Please try again." . var_export($e, true));
         }
     }
 
-    if($isValid && strcmp($accountType, "savings") == 0){
-        $stmt = $db->prepare("UPDATE TPAccounts SET apy = :apy, nextApy = DATE_ADD(current_date, INTERVAL 1 MONTH) WHERE id = :id");
-        $r = $stmt->execute([":apy" => 0.05,
-                             ":id" => $actID]);
+    if($isValid){
+        $stmt = $db->prepare("SELECT id FROM TPAccounts WHERE account_number = :accountNum");
+        $r = $stmt->execute([":accountNum" => $newActNum]);
+        if($r){
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $loanID = $result["id"];
+        }
     }
 
-    if($isValid){
+    /*if($isValid){
         //Get expected total for world account
         $stmt = $db->prepare("SELECT balance FROM TPAccounts WHERE id = :id");
         $r = $stmt->execute([":id" => $worldID]);
@@ -123,18 +130,32 @@ if(isset($_POST["submit"])){
             flash("Error getting balance for world account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
+    }*/
+
+    if($isValid){
+        //Get expected total for the account getting the deposit from the loan account
+        $stmt = $db->prepare("SELECT balance FROM TPAccounts WHERE id = :id");
+        $r = $stmt->execute([":id" => $depositAccount]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $depositTotal = $result["balance"];
+
+        if (!$r) {
+            $e = $stmt->errorInfo();
+            flash("Error getting balance for deposit account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            $isValid = false;
+        }
     }
 
     if($isValid){
-        //Create Transaction, to pull from world account
-        $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:world, :newAct, :amount, :action, :memo, :total)");
+        //Create Transaction, to pull from loan account
+        $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:loan, :newAct, :amount, :action, :memo, :total)");
         $r = $stmt->execute([
-            ":world" => $worldID,
-            ":newAct" => $actID,
+            ":loan" => $loanID,
+            ":newAct" => $depositAccount,
             ":amount" => (float)$initBalance * -1,
             ":action" => "deposit",
-            ":memo" => "Initial Deposit",
-            ":total" => ($worldTotal - $initBalance)
+            ":memo" => "Loan Deposit",
+            ":total" => (float)$initBalance * -1
         ]);
 
         if (!$r) {
@@ -146,14 +167,14 @@ if(isset($_POST["submit"])){
 
     if($isValid){
         //Create Transaction, to put into new account
-        $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:newAct, :world, :amount, :action, :memo, :total)");
+        $stmt = $db->prepare("INSERT INTO TPTransactions (act_src_id, act_dest_id, amount, action_type, memo, expected_total) VALUES(:newAct, :loan, :amount, :action, :memo, :total)");
         $r = $stmt->execute([
-            ":newAct" => $actID,
-            ":world" => $worldID,
+            ":newAct" => $depositAccount,
+            ":loan" => $loanID,
             ":amount" => (float)$initBalance,
             ":action" => "deposit",
-            ":memo" => "Initial Deposit",
-            ":total" => (float)$initBalance
+            ":memo" => "Loan Deposit",
+            ":total" => ($depositTotal + $initBalance)
         ]);
 
         if (!$r) {
@@ -164,9 +185,9 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Sums the new account's expected balance
+        //Sums the deposit account's expected balance
         $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :actID");
-        $r = $stmt->execute([":actID" => $actID]);
+        $r = $stmt->execute([":actID" => $depositAccount]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $balance = $result["total"];
 
@@ -182,7 +203,7 @@ if(isset($_POST["submit"])){
         $stmt = $db->prepare("UPDATE TPAccounts SET balance = :balance WHERE id = :id");
         $r = $stmt->execute([
             ":balance" => $balance,
-            ":id" => $actID
+            ":id" => $depositAccount
         ]);
 
         if (!$r) {
@@ -193,15 +214,15 @@ if(isset($_POST["submit"])){
     }
 
     if($isValid){
-        //Sums the world account's expected balance
-        $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :world");
-        $r = $stmt->execute([":world" => $worldID]);
+        //Sums the loan account's expected balance
+        $stmt = $db->prepare("SELECT SUM(amount) AS total FROM TPTransactions WHERE act_src_id = :loan");
+        $r = $stmt->execute([":loan" => $loanID]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $balance = $result["total"];
 
         if (!$r) {
             $e = $stmt->errorInfo();
-            flash("Error SUMming total for world account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            flash("Error SUMming total for loan account. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
     }
@@ -211,12 +232,12 @@ if(isset($_POST["submit"])){
         $stmt = $db->prepare("UPDATE TPAccounts SET balance = :balance WHERE id = :id");
         $r = $stmt->execute([
             ":balance" => $balance,
-            ":id" => $worldID
+            ":id" => $loanID
         ]);
 
         if (!$r) {
             $e = $stmt->errorInfo();
-            flash("Error updating world balance. Please contact your bank representative and relay the following error code. " . var_export($e, true));
+            flash("Error updating loan balance. Please contact your bank representative and relay the following error code. " . var_export($e, true));
             $isValid = false;
         }
     }

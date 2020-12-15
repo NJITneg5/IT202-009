@@ -7,7 +7,7 @@ if(!has_role("Admin")) {
 }
 
 $outside = true;
-$searchResults = 0;
+$searchResults = array();
 
 if(isset($_POST["searchSub"])){
 

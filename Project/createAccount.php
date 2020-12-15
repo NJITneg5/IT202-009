@@ -9,11 +9,10 @@ if (!is_logged_in()) {
 <div class="bodyMain">
     <h1>Please Create An Account With Our Bank</h1>
 
-    <h5><i>Please note: Starting APY at our bank for a savings account is 0.05% and 9% for our loans.</i></h5>
+    <h5><i>Please note: Starting APY at our bank for a savings account is 0.05%.</i></h5>
 
     <form method="POST">
         <label>Account Type:<br>
-            <!--TODO Add other account types such as savings when time comes-->
             <select name="accountType">
                 <option value="checking">Checking</option>
                 <option value="savings">Savings</option>
@@ -59,7 +58,6 @@ if(isset($_POST["submit"])){
 
     while(!$uniqueNum && $uniqueCount < 10 && $isValid) {    //Loop to generate a unique account number
         $newActNum = rand(100000000000, 999999999999);
-        //str_pad($newActNum,12,"0",STR_PAD_LEFT);
         $stmt = $db->prepare("SELECT account_number from TPAccounts WHERE account_number = :num");
         $r = $stmt->execute([
             ":num"=>$newActNum

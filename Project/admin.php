@@ -8,6 +8,7 @@ if(!has_role("Admin")) {
 
 $outside = true;
 $searchResults = array();
+$params = array();
 
 if(isset($_POST["searchSub"])){
 
@@ -35,6 +36,7 @@ if(isset($_POST["searchSub"])){
     $query .= " ORDER BY lastName";
 
     $stmt = $db->prepare($query);
+
     foreach($params as $key=>$val){
         $stmt->bindValue($key, $val);
     }
@@ -43,7 +45,7 @@ if(isset($_POST["searchSub"])){
         $searchResults = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
         $e = $stmt->errorInfo();
-        flash("Something went wrong" . var_export($e, true));
+        flash("Something went wrong " . var_export($e, true));
     }
 }
 ?>
